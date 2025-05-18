@@ -1,0 +1,39 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "Backend for a quiz app",
+    "homepage": "https://github.com/MisterWaner/ninja-quiz-back#readme",
+    "bugs": {
+        "url": "https://github.com/MisterWaner/ninja-quiz-back/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MisterWaner/ninja-quiz-back.git"
+    },
+    "license": "ISC",
+    "author": "E. Soulas",
+    "type": "module",
+    "main": "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "tsc",
+        "start": "node dist/server.js",
+        "dev": "concurrently -k -n \"Typescript,Node\" -p \"[{name}]\" -c \"blue,green\" \"tsc --watch\" \"nodemon -r dotenv/config dist/server.js\" "
+    },
+    "devDependencies": {
+        "@types/node": "^22.15.18",
+        "concurrently": "^9.1.2",
+        "nodemon": "^3.1.10",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.3"
+    },
+    "dependencies": {
+        "@types/bcrypt": "^5.0.2",
+        "@types/better-sqlite3": "^7.6.13",
+        "bcrypt": "^6.0.0",
+        "better-sqlite3": "^11.10.0",
+        "dotenv": "^16.5.0",
+        "fastify": "^5.3.3",
+        "nanoid": "^5.1.5"
+    }
+}
