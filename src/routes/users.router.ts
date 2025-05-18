@@ -19,7 +19,7 @@ export async function usersRouter(fastify: FastifyInstance) {
         userController.updateUserUsername
     );
     fastify.put<{ Params: { id: string }; Body: { password: User['password'] } }>(
-        '/:id',
+        '/:id/pwd',
         {},
         userController.updateUserPassword
     );

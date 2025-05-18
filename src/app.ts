@@ -11,8 +11,13 @@ fastifyApp.register(fastifyCors, {
     credentials: true,
 });
 
+// import routes
+import { routes } from './routes';
+
 fastifyApp.get('/', (req, res) => {
     res.send('API démarrée et opérationnelle');
 })
+
+fastifyApp.register(routes);
 
 export default fastifyApp;
