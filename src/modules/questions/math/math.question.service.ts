@@ -13,7 +13,7 @@ export class MathQuestionService implements MathQuestionRepository {
         return new DirectQuestion(id, questionText, correctAnswer);
     }
 
-    generateSubtraction(): DirectQuestion {
+    generateSubstraction(): DirectQuestion {
         const id = generateNumberId();
         const number1 = Math.floor(Math.random() * 100);
         const number2 = Math.floor(Math.random() * 100);
@@ -47,7 +47,7 @@ export class MathQuestionService implements MathQuestionRepository {
     generateRandomOperation(): DirectQuestion {
         const operations = [
             this.generateAddition.bind(this),
-            this.generateSubtraction.bind(this),
+            this.generateSubstraction.bind(this),
             this.generateMultiplication.bind(this),
         ];
 

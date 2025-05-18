@@ -7,7 +7,7 @@ import { generateNumberId } from '../../../lib/id-generators';
 export class MathQuizController {
     constructor(private mathQuestionService: MathQuestionService) {}
 
-    getAddition(request: FastifyRequest, reply: FastifyReply) {
+    getAddition = (request: FastifyRequest, reply: FastifyReply) =>{
         const id = generateNumberId();
         const length = 10;
         const questionType = 'direct';
@@ -17,18 +17,17 @@ export class MathQuizController {
         );
 
         const quiz = new Quiz(id, questionType, questions, theme);
-        console.log(quiz);
 
         reply.status(200).send(quiz);
     }
 
-    getSubstraction(request: FastifyRequest, reply: FastifyReply) {
+    getSubstraction = (request: FastifyRequest, reply: FastifyReply) => {
         const id = generateNumberId();
         const length = 10;
         const questionType = 'direct';
         const theme = 'substraction';
         const questions: DirectQuestion[] = Array.from({ length }, () =>
-            this.mathQuestionService.generateSubtraction()
+            this.mathQuestionService.generateSubstraction()
         );
 
         const quiz = new Quiz(id, questionType, questions, theme);
@@ -36,7 +35,7 @@ export class MathQuizController {
         reply.status(200).send(quiz);
     }
 
-    getMultiplication(request: FastifyRequest, reply: FastifyReply) {
+    getMultiplication = (request: FastifyRequest, reply: FastifyReply) => {
         const id = generateNumberId();
         const length = 10;
         const questionType = 'direct';
@@ -50,7 +49,7 @@ export class MathQuizController {
         reply.status(200).send(quiz);
     }
 
-    getRandomOperation(request: FastifyRequest, reply: FastifyReply) {
+    getRandomOperation = (request: FastifyRequest, reply: FastifyReply) => {
         const id = generateNumberId();
         const length = 10;
         const questionType = 'direct';

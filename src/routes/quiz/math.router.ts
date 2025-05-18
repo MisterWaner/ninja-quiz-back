@@ -7,8 +7,14 @@ const mathQuestionService = new MathQuestionService();
 const mathQuizController = new MathQuizController(mathQuestionService);
 
 export async function mathRouter(fastify: FastifyInstance) {
-    fastify.get<{Reply: Quiz}>('/addition', {}, mathQuizController.getAddition);
-    fastify.get<{Reply: Quiz}>('/soustraction', {}, mathQuizController.getSubstraction);
-    fastify.get<{Reply: Quiz}>('/multiplication', {}, mathQuizController.getMultiplication);
-    fastify.get<{Reply: Quiz}>('/calculs-aleatoires', {}, mathQuizController.getRandomOperation);
+    const routes = [
+        {url: '/addition', handler: mathQuizController.getAddition},
+        {url: '/soustraction', handler: mathQuizController.getSubstraction},
+        {url: '/multiplication', handler: mathQuizController.getMultiplication},
+        {url: '/calculs-aleatoires', handler: mathQuizController.getRandomOperation},
+    ]
+
+    routes.forEach(({url, handler}) => {
+        fastify.get<{Reply: Quiz}>(url, {}, handler.bind(mathQuizController));
+    })
 }
