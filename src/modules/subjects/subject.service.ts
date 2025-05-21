@@ -85,7 +85,7 @@ export class SubjectService implements SubjectRepository {
             )
             .all() as RawSubject[];
 
-        if (!subjects) {
+        if (subjects.length === 0) {
             throw new Error('Subjects not found');
         }
 

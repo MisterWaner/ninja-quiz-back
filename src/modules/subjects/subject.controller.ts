@@ -6,10 +6,10 @@ import { normalizedString } from '../../lib/helpers/general-helpers';
 export class SubjectController {
     constructor(private subjectService: SubjectService) {}
 
-    async createSubject(
+    createSubject = async(
         request: FastifyRequest,
         reply: FastifyReply
-    ): Promise<void> {
+    ): Promise<void> => {
         try {
             const subject = request.body as Subject;
 
@@ -32,10 +32,10 @@ export class SubjectController {
         }
     }
 
-    async getSubjects(
+    getSubjects = async(
         request: FastifyRequest,
         reply: FastifyReply
-    ): Promise<void> {
+    ): Promise<void> => {
         try {
             const subjects = await this.subjectService.getSubjects();
             if (!subjects) reply.status(404).send('No subjects found');
@@ -46,10 +46,10 @@ export class SubjectController {
         }
     }
 
-    async getSubjectById(
+    getSubjectById = async(
         request: FastifyRequest<{ Params: { id: number } }>,
         reply: FastifyReply
-    ): Promise<void> {
+    ): Promise<void> => {
         try {
             const { id } = request.params;
             const subject = await this.subjectService.getSubjectById(id);
@@ -64,10 +64,10 @@ export class SubjectController {
         }
     }
 
-    async updateSubject(
+    updateSubject = async (
         request: FastifyRequest<{ Params: { id: number } }>,
         reply: FastifyReply
-    ): Promise<void> {
+    ): Promise<void> => {
         try {
             const { id } = request.params;
             const { name } = request.body as Subject;
@@ -86,10 +86,10 @@ export class SubjectController {
         }
     }
 
-    async deleteSubject(
+    deleteSubject = async (
         request: FastifyRequest<{ Params: { id: number } }>,
         reply: FastifyReply
-    ): Promise<void> {
+    ): Promise<void> => {
         try {
             const { id } = request.params;
             const subject = await this.subjectService.getSubjectById(id);
@@ -105,10 +105,10 @@ export class SubjectController {
         }
     }
 
-    async getSubjectsWithThemes(
+    getSubjectsWithThemes = async(
         request: FastifyRequest,
         reply: FastifyReply
-    ): Promise<void> {
+    ): Promise<void> => {
         try {
             const subjects = await this.subjectService.getSubjectsWithThemes();
             if (!subjects) reply.status(404).send('No subjects found');
