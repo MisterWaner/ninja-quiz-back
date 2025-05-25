@@ -12,7 +12,7 @@ export class CapitalsQuizController {
         reply: FastifyReply
     ) => {
         const id = generateNumberId();
-        const questionType = 'multiple-choice';
+        const questionType = 'multiple';
         const length: number = 10;
         const theme = 'european-capitals';
         const questions: MultipleChoiceQuestion[] = await Promise.all(
@@ -31,7 +31,7 @@ export class CapitalsQuizController {
         reply: FastifyReply
     ) => {
         const id = generateNumberId();
-        const questionType = 'multiple-choice';
+        const questionType = 'multiple';
         const length: number = 10;
         const theme = 'african-capitals';
         const questions: MultipleChoiceQuestion[] = await Promise.all(
@@ -47,7 +47,7 @@ export class CapitalsQuizController {
 
     getAsianCapitals = async (request: FastifyRequest, reply: FastifyReply) => {
         const id = generateNumberId();
-        const questionType = 'multiple-choice';
+        const questionType = 'multiple';
         const length: number = 10;
         const theme = 'asian-capitals';
         const questions: MultipleChoiceQuestion[] = await Promise.all(
@@ -66,7 +66,7 @@ export class CapitalsQuizController {
         reply: FastifyReply
     ) => {
         const id = generateNumberId();
-        const questionType = 'multiple-choice';
+        const questionType = 'multiple';
         const length: number = 10;
         const theme = 'american-capitals';
         const questions: MultipleChoiceQuestion[] = await Promise.all(
@@ -85,7 +85,7 @@ export class CapitalsQuizController {
         reply: FastifyReply
     ) => {
         const id = generateNumberId();
-        const questionType = 'multiple-choice';
+        const questionType = 'multiple';
         const length: number = 10;
         const theme = 'oceanic-capitals';
         const questions: MultipleChoiceQuestion[] = await Promise.all(
@@ -104,7 +104,7 @@ export class CapitalsQuizController {
         reply: FastifyReply
     ) => {
         const id = generateNumberId();
-        const questionType = 'multiple-choice';
+        const questionType = 'multiple';
         const length: number = 10;
         const theme = 'random-capitals';
         const questions: MultipleChoiceQuestion[] = await Promise.all(

@@ -9,7 +9,7 @@ export class FlagsQuizController {
 
     getEuropeanFlags = async (request: FastifyRequest, reply: FastifyReply) => {
         const id = generateNumberId();
-        const questionType = 'multiple-choice';
+        const questionType = 'multiple';
         const length: number = 10;
         const theme = 'european-flags';
         const questions: MultipleChoiceQuestion[] = await Promise.all(
@@ -24,7 +24,7 @@ export class FlagsQuizController {
 
     getAfricanFlags = async (request: FastifyRequest, reply: FastifyReply) => {
         const id = generateNumberId();
-        const questionType = 'multiple-choice';
+        const questionType = 'multiple';
         const length: number = 10;
         const theme = 'african-flags';
         const questions: MultipleChoiceQuestion[] = await Promise.all(
@@ -40,7 +40,7 @@ export class FlagsQuizController {
 
     getAsianFlags = async (request: FastifyRequest, reply: FastifyReply) => {
         const id = generateNumberId();
-        const questionType = 'multiple-choice';
+        const questionType = 'multiple';
         const length: number = 10;
         const theme = 'asian-flags';
         const questions: MultipleChoiceQuestion[] = await Promise.all(
@@ -56,7 +56,7 @@ export class FlagsQuizController {
 
     getAmericanFlags = async (request: FastifyRequest, reply: FastifyReply) => {
         const id = generateNumberId();
-        const questionType = 'multiple-choice';
+        const questionType = 'multiple';
         const length: number = 10;
         const theme = 'american-flags';
         const questions: MultipleChoiceQuestion[] = await Promise.all(
@@ -72,7 +72,7 @@ export class FlagsQuizController {
 
     getOceanianFlags = async (request: FastifyRequest, reply: FastifyReply) => {
         const id = generateNumberId();
-        const questionType = 'multiple-choice';
+        const questionType = 'multiple';
         const length: number = 10;
         const theme = 'oceanic-flags';
         const questions: MultipleChoiceQuestion[] = await Promise.all(
@@ -88,7 +88,7 @@ export class FlagsQuizController {
 
     getRandomFlags = async (request: FastifyRequest, reply: FastifyReply) => {
         const id = generateNumberId();
-        const questionType = 'multiple-choice';
+        const questionType = 'multiple';
         const length: number = 10;
         const theme = 'random-flags';
         const questions: MultipleChoiceQuestion[] = await Promise.all(

@@ -8,7 +8,7 @@ import {
 export class Quiz {
     constructor(
         public id: number,
-        public questionType: 'direct' | 'multiple-choice' | 'true-false',
+        public questionType: 'direct' | 'multiple' | 'trueOrFalse',
         public questions:
             | DirectQuestion[]
             | MultipleChoiceQuestion[]
