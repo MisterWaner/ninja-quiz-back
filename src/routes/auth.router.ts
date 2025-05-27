@@ -16,5 +16,7 @@ export async function authRouter(fastify: FastifyInstance) {
         Body: { username: string; password: string };
     }>('/login', authController.login);
 
+    fastify.get('/me', authController.meHandler);
+
     fastify.post('/logout',  authController.logout);
 }

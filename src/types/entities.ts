@@ -7,10 +7,4 @@ export type Country = {
         svg: string;
     };
     capital: string[];
-    translations?: {
-        fra: {
-            official: string;
-            common: string;
-        };
-    };
 };

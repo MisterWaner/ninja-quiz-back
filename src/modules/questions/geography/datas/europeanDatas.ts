@@ -1,17 +1,13 @@
 import type { Country } from '../../../../types/entities';
-
-const europeanDatasUrl =
-    'https://restcountries.com/v3.1/region/europe?fields=name,flags,capital,translations';
+import { europeanDatas } from '../../../../api/geography/europeanApi';
 
 export async function fetchEuropeanCountries(): Promise<Country[]> {
-    const response = await fetch(europeanDatasUrl);
-    const data: Country[] = await response.json();
 
-    const europeanDatas = data.map((country: Country) => ({
-        name: { common: country?.translations?.fra.common || '' },
+    const datas = europeanDatas.map((country: Country) => ({
+        name: { common: country.name.common },
         capital: country.capital,
         flags: { svg: country.flags.svg, png: country.flags.png },
     }));
 
-    return europeanDatas;
+    return datas;
 }

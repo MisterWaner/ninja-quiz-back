@@ -22,11 +22,9 @@ export class AuthController {
             }
 
             if (password !== confirmPassword) {
-                reply
-                    .status(400)
-                    .send({
-                        message: 'Les mots de passe ne correspondent pas',
-                    });
+                reply.status(400).send({
+                    message: 'Les mots de passe ne correspondent pas',
+                });
                 return;
             }
 
@@ -79,33 +77,36 @@ export class AuthController {
                     maxAge: 60 * 60 * 24, // 24 hours
                 })
                 .status(200)
-                .send({ message: 'Authentifié avec succès' });
+                .send({ message: 'Authentifié avec succès', token });
         } catch (error) {
             reply.status(500).send({ message: 'Erreur interne' });
         }
     };
 
-    // meHandler = async (request: FastifyRequest, reply: FastifyReply) => {
-    //     try {
-    //         const token = request.cookies.token;
-    //         if (!token) {
-    //             reply
-    //                 .status(401)
-    //                 .send({ message: "Vous n'êtes pas authentifié" });
-    //             return;
-    //         }
+    meHandler = async (request: FastifyRequest, reply: FastifyReply) => {
+        try {
+            const token = request.cookies.token;
 
-    //         const user = await this.userService.getUserById(token);
-    //         if (!user) {
-    //             reply.status(401).send({ message: 'Identifiants incorrects' });
-    //             return;
-    //         }
+            if (!token) {
+                reply
+                    .status(401)
+                    .send({ message: "Vous n'êtes pas authentifié" });
+                return;
+            }
 
-    //         reply.status(200).send(user);
-    //     } catch (error) {
-    //         reply.status(500).send({ message: 'Erreur interne' });
-    //     }
-    // };
+            const decoded = await request.jwtVerify<{
+                id: string;
+                username: string;
+            }>();
+
+            reply.status(200).send({
+                id: decoded.id,
+                username: decoded.username,
+            });
+        } catch (error) {
+            reply.status(401).send({ message: 'Token invalide ou expiré' });
+        }
+    };
 
     logout = async (request: FastifyRequest, reply: FastifyReply) => {
         try {
@@ -116,7 +117,7 @@ export class AuthController {
                     .send({ message: "Vous n'êtes pas authentifié" });
                 return;
             }
-            
+
             reply
                 .clearCookie('token')
                 .status(200)
