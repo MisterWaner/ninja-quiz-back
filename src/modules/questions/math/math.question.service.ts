@@ -48,7 +48,7 @@ export class MathQuestionService implements MathQuestionRepository {
         const id = generateNumberId();
         const number1 = Math.floor(Math.random() * 100);
         const number2 = Math.floor(Math.random() * 100);
-        const questionText = `${number1} ........ ${number2}`;
+        const questionText = `< , > ou = ? \n ${number1} ........ ${number2}`;
         let correctAnswer: string;
 
         if (number1 > number2) {
@@ -66,7 +66,7 @@ export class MathQuestionService implements MathQuestionRepository {
         const id = generateNumberId();
         const number1 = parseFloat((Math.random() * 100).toFixed(2));
         const number2 = parseFloat((Math.random() * 100).toFixed(2));
-        const questionText = `${number1} ........ ${number2}`;
+        const questionText = `< , > ou = ? \n ${number1} ........ ${number2}`;
         let correctAnswer: string;
 
         if (number1 > number2) {
