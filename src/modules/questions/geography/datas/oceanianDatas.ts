@@ -1,17 +1,12 @@
 import type { Country } from '../../../../types/entities';
-
-const oceanianDatasUrl =
-    'https://restcountries.com/v3.1/region/oceania?fields=name,flags,capital,translations';
+import { oceanianDatas } from '../../../../api/geography/oceanianApi';
 
 export async function fetchOceanianCountries(): Promise<Country[]> {
-    const response = await fetch(oceanianDatasUrl);
-    const data: Country[] = await response.json();
-
-    const oceanianDatas = data.map((country: Country) => ({
-        name: { common: country?.translations?.fra.common || '' },
+    const datas = oceanianDatas.map((country: Country) => ({
+        name: { common: country.name.common },
         capital: country.capital,
         flags: { svg: country.flags.svg, png: country.flags.png },
     }));
 
-    return oceanianDatas;
+    return datas;
 }

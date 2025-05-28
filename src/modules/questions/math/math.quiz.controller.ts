@@ -7,7 +7,7 @@ import { generateNumberId } from '../../../lib/id-generators';
 export class MathQuizController {
     constructor(private mathQuestionService: MathQuestionService) {}
 
-    getAddition = (request: FastifyRequest, reply: FastifyReply) =>{
+    getAddition = (request: FastifyRequest, reply: FastifyReply) => {
         const id = generateNumberId();
         const length = 10;
         const questionType = 'direct';
@@ -19,7 +19,7 @@ export class MathQuizController {
         const quiz = new Quiz(id, questionType, questions, theme);
 
         reply.status(200).send(quiz);
-    }
+    };
 
     getSubstraction = (request: FastifyRequest, reply: FastifyReply) => {
         const id = generateNumberId();
@@ -33,7 +33,7 @@ export class MathQuizController {
         const quiz = new Quiz(id, questionType, questions, theme);
 
         reply.status(200).send(quiz);
-    }
+    };
 
     getMultiplication = (request: FastifyRequest, reply: FastifyReply) => {
         const id = generateNumberId();
@@ -47,7 +47,35 @@ export class MathQuizController {
         const quiz = new Quiz(id, questionType, questions, theme);
 
         reply.status(200).send(quiz);
-    }
+    };
+
+    getIntergerComparison = (request: FastifyRequest, reply: FastifyReply) => {
+        const id = generateNumberId();
+        const length = 10;
+        const questionType = 'direct';
+        const theme = 'integer-comparison';
+        const questions: DirectQuestion[] = Array.from({ length }, () =>
+            this.mathQuestionService.generateIntegerComparison()
+        );
+
+        const quiz = new Quiz(id, questionType, questions, theme);
+
+        reply.status(200).send(quiz);
+    };
+
+    getDecimalComparison = (request: FastifyRequest, reply: FastifyReply) => {
+        const id = generateNumberId();
+        const length = 10;
+        const questionType = 'direct';
+        const theme = 'decimal-comparison';
+        const questions: DirectQuestion[] = Array.from({ length }, () =>
+            this.mathQuestionService.generateDecimalComparison()
+        );
+
+        const quiz = new Quiz(id, questionType, questions, theme);
+
+        reply.status(200).send(quiz);
+    };
 
     getRandomOperation = (request: FastifyRequest, reply: FastifyReply) => {
         const id = generateNumberId();
@@ -61,6 +89,5 @@ export class MathQuizController {
         const quiz = new Quiz(id, questionType, questions, theme);
 
         reply.status(200).send(quiz);
-    }
-
+    };
 }

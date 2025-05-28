@@ -12,6 +12,8 @@ const subjectsWithThemes: Record<string, string[]> = {
         'Multiplication',
         'Soustraction',
         'Calculs aléatoires',
+        'Comparaison entiers',
+        'Comparaison décimales',
     ],
     Géographie: [
         'Capitales européennes',

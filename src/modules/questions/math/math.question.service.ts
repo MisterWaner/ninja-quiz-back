@@ -44,6 +44,42 @@ export class MathQuestionService implements MathQuestionRepository {
         return new DirectQuestion(id, questionText, correctAnswer);
     }
 
+    generateIntegerComparison(): DirectQuestion {
+        const id = generateNumberId();
+        const number1 = Math.floor(Math.random() * 100);
+        const number2 = Math.floor(Math.random() * 100);
+        const questionText = `${number1} ........ ${number2}`;
+        let correctAnswer: string;
+
+        if (number1 > number2) {
+            correctAnswer = '>';
+        } else if (number1 < number2) {
+            correctAnswer = '<';
+        } else {
+            correctAnswer = '=';
+        }
+
+        return new DirectQuestion(id, questionText, correctAnswer);
+    }
+
+    generateDecimalComparison(): DirectQuestion {
+        const id = generateNumberId();
+        const number1 = parseFloat((Math.random() * 100).toFixed(2));
+        const number2 = parseFloat((Math.random() * 100).toFixed(2));
+        const questionText = `${number1} ........ ${number2}`;
+        let correctAnswer: string;
+
+        if (number1 > number2) {
+            correctAnswer = '>';
+        } else if (number1 < number2) {
+            correctAnswer = '<';
+        } else {
+            correctAnswer = '=';
+        }
+
+        return new DirectQuestion(id, questionText, correctAnswer);
+    }
+
     generateRandomOperation(): DirectQuestion {
         const operations = [
             this.generateAddition.bind(this),

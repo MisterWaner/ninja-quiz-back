@@ -12,6 +12,8 @@ export async function mathRouter(fastify: FastifyInstance) {
         {url: '/soustraction', handler: mathQuizController.getSubstraction},
         {url: '/multiplication', handler: mathQuizController.getMultiplication},
         {url: '/calculs-aleatoires', handler: mathQuizController.getRandomOperation},
+        {url: '/comparaison-entiers', handler: mathQuizController.getIntergerComparison},
+        {url: '/comparaison-decimales', handler: mathQuizController.getDecimalComparison},
     ]
 
     routes.forEach(({url, handler}) => {

@@ -21,7 +21,8 @@ export class CapitalsQuestionService implements GeoCapitalsQuestionRepository {
         const correctAnswer = selectedCountry.capital.toString();
 
         const options = generateMultipleChoiceQuestionOptions(
-            countriesData.map((country) => country.capital.toString())
+            countriesData.map((country) => country.capital.toString()),
+            correctAnswer
         );
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
@@ -42,7 +43,8 @@ export class CapitalsQuestionService implements GeoCapitalsQuestionRepository {
         const correctAnswer = selectedCountry.capital.toString();
 
         const options = generateMultipleChoiceQuestionOptions(
-            countriesData.map((country) => country.capital.toString())
+            countriesData.map((country) => country.capital.toString()),
+            correctAnswer
         );
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
@@ -63,7 +65,8 @@ export class CapitalsQuestionService implements GeoCapitalsQuestionRepository {
         const correctAnswer = selectedCountry.capital.toString();
 
         const options = generateMultipleChoiceQuestionOptions(
-            countriesData.map((country) => country.capital.toString())
+            countriesData.map((country) => country.capital.toString()),
+            correctAnswer
         );
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
@@ -84,7 +87,8 @@ export class CapitalsQuestionService implements GeoCapitalsQuestionRepository {
         const correctAnswer = selectedCountry.capital.toString();
 
         const options = generateMultipleChoiceQuestionOptions(
-            countriesData.map((country) => country.capital.toString())
+            countriesData.map((country) => country.capital.toString()),
+            correctAnswer
         );
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
@@ -104,7 +108,8 @@ export class CapitalsQuestionService implements GeoCapitalsQuestionRepository {
         const correctAnswer = selectedCountry.capital.toString();
 
         const options = generateMultipleChoiceQuestionOptions(
-            countriesData.map((country) => country.capital.toString())
+            countriesData.map((country) => country.capital.toString()),
+            correctAnswer
         );
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);

@@ -1,7 +1,11 @@
 import { GeoFlagsQuestionRepository } from '../../../../application/question.repository';
 import { MultipleChoiceQuestion } from '../../../../models/Question';
 import { generateNumberId } from '../../../../lib/id-generators';
-import { shuffleOptionsInMultipleChoiceQuestion, getRandomItem, generateMultipleChoiceQuestionOptions } from '../../../../lib/helpers/quiz-helpers';
+import {
+    shuffleOptionsInMultipleChoiceQuestion,
+    getRandomItem,
+    generateMultipleChoiceQuestionOptions,
+} from '../../../../lib/helpers/quiz-helpers';
 import { fetchAfricanCountries } from '../datas/africanDatas';
 import { fetchAsianCountries } from '../datas/asianDatas';
 import { fetchEuropeanCountries } from '../datas/europeanDatas';
@@ -18,7 +22,8 @@ export class FlagsQuestionService implements GeoFlagsQuestionRepository {
         const correctAnswer = selectedCountry.name.common;
 
         const options = generateMultipleChoiceQuestionOptions(
-            countriesData.map((country) => country.name.common)
+            countriesData.map((country) => country.name.common),
+            correctAnswer
         );
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
@@ -41,7 +46,8 @@ export class FlagsQuestionService implements GeoFlagsQuestionRepository {
         const correctAnswer = selectedCountry.name.common;
 
         const options = generateMultipleChoiceQuestionOptions(
-            countriesData.map((country) => country.name.common)
+            countriesData.map((country) => country.name.common),
+            correctAnswer
         );
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
@@ -64,7 +70,8 @@ export class FlagsQuestionService implements GeoFlagsQuestionRepository {
         const correctAnswer = selectedCountry.name.common;
 
         const options = generateMultipleChoiceQuestionOptions(
-            countriesData.map((country) => country.name.common)
+            countriesData.map((country) => country.name.common),
+            correctAnswer
         );
 
         options.push(correctAnswer);
@@ -88,7 +95,8 @@ export class FlagsQuestionService implements GeoFlagsQuestionRepository {
         const correctAnswer = selectedCountry.name.common;
 
         const options = generateMultipleChoiceQuestionOptions(
-            countriesData.map((country) => country.name.common)
+            countriesData.map((country) => country.name.common),
+            correctAnswer
         );
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
@@ -111,7 +119,8 @@ export class FlagsQuestionService implements GeoFlagsQuestionRepository {
         const correctAnswer = selectedCountry.name.common;
 
         const options = generateMultipleChoiceQuestionOptions(
-            countriesData.map((country) => country.name.common)
+            countriesData.map((country) => country.name.common),
+            correctAnswer
         );
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
