@@ -48,7 +48,7 @@ export class ThemeController {
     }
 
     async getThemeById(
-        request: FastifyRequest<{ Params: { id: number } }>,
+        request: FastifyRequest<{ Params: { id: string } }>,
         reply: FastifyReply
     ): Promise<void> {
         try {
@@ -65,7 +65,10 @@ export class ThemeController {
         }
     }
 
-    async updateTheme(request: FastifyRequest<{Params: {id: number}}>, reply: FastifyReply): Promise<void> {
+    async updateTheme(
+        request: FastifyRequest<{ Params: { id: string } }>,
+        reply: FastifyReply
+    ): Promise<void> {
         try {
             const { id } = request.params;
             const { name } = request.body as Theme;
@@ -85,7 +88,7 @@ export class ThemeController {
     }
 
     async deleteTheme(
-        request: FastifyRequest<{ Params: { id: number } }>,
+        request: FastifyRequest<{ Params: { id: string } }>,
         reply: FastifyReply
     ): Promise<void> {
         try {

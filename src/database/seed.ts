@@ -53,7 +53,7 @@ export async function seedDatabase() {
 
             for (const themeName of themes) {
                 const theme: Theme = {
-                    id: 0,
+                    id: '',
                     name: themeName,
                     themePath: '',
                     subjectId: createdSubject.id,

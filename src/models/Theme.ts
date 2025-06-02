@@ -1,6 +1,6 @@
 export class Theme {
     constructor(
-        public id: number,
+        public id: string,
         public name: string,
         public themePath: string,
         public subjectId: number

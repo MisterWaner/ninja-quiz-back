@@ -14,10 +14,12 @@ export function init() {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id TEXT NOT NULL,
             theme_id number NOT NULL,
+            subject_id number NOT NULL,
             value INTEGER NOT NULL,
             date TEXT NOT NULL,
             FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-            FOREIGN KEY(theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE CASCADE
+            FOREIGN KEY(theme_id) REFERENCES themes(id) ON DELETE CASCADE ON UPDATE CASCADE,
+            FOREIGN KEY(subject_id) REFERENCES subjects(id) ON DELETE CASCADE ON UPDATE CASCADE
         );
         
         CREATE TABLE IF NOT EXISTS subjects (
@@ -27,7 +29,7 @@ export function init() {
         );
 
         CREATE TABLE IF NOT EXISTS themes (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id TEXT PRIMARY KEY,
             name TEXT NOT NULL,
             themePath TEXT NOT NULL,
             subject_id INTEGER NOT NULL,

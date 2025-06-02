@@ -9,17 +9,17 @@ const themeController = new ThemeController(themeService);
 export async function themesRouter(fastify: FastifyInstance) {
     fastify.post<{ Body: Theme }>('/', {}, themeController.createTheme);
     fastify.get<{ Reply: Theme[] }>('/', {}, themeController.getThemes);
-    fastify.get<{ Params: { id: number }; Reply: Theme }>(
+    fastify.get<{ Params: { id: string }; Reply: Theme }>(
         '/:id',
         {},
         themeController.getThemeById
     );
-    fastify.put<{ Params: { id: number }; Body: { name: Theme['name'] } }>(
+    fastify.put<{ Params: { id: string }; Body: { name: Theme['name'] } }>(
         '/:id',
         {},
         themeController.updateTheme
     );
-    fastify.delete<{ Params: { id: number } }>(
+    fastify.delete<{ Params: { id: string } }>(
         '/:id',
         {},
         themeController.deleteTheme

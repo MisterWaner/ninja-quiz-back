@@ -8,6 +8,17 @@ const subjectService = new SubjectService();
 
 export class ThemeService implements ThemeRepository {
     async createTheme(theme: Theme): Promise<void> {
+        const subjectName = await subjectService.getSubjectById(
+            theme.subjectId
+        ).then((s) => s.name);
+        if (!subjectName) throw new Error('Subject not found');
+
+        const prefix = normalizedString(subjectName).substring(0, 4).toUpperCase();
+        const result = db.prepare('SELECT COUNT(*) AS count FROM themes WHERE subject_id = ?').get(theme.subjectId) as { count: number };
+        const existingCount = result.count;
+
+        const id = `${prefix}_${existingCount + 1}`;
+        
         const { name, subjectId } = theme;
         const themePath = normalizedString(name);
         const subjectExists = (await subjectService.getSubjects()).find(
@@ -19,8 +30,8 @@ export class ThemeService implements ThemeRepository {
         }
 
         db.prepare(
-            'INSERT INTO themes (name, subject_id, themePath) VALUES (?, ?, ?)'
-        ).run(name, subjectId, themePath);
+            'INSERT INTO themes (id, name, subject_id, themePath) VALUES (?,?, ?, ?)'
+        ).run(id, name, subjectId, themePath);
     }
 
     async getThemes(): Promise<Theme[]> {
@@ -31,7 +42,7 @@ export class ThemeService implements ThemeRepository {
         return themes;
     }
 
-    async getThemeById(id: number): Promise<Theme> {
+    async getThemeById(id: string): Promise<Theme> {
         const theme = db
             .prepare('SELECT * FROM themes WHERE id = ?')
             .get(id) as Theme;
@@ -42,7 +53,7 @@ export class ThemeService implements ThemeRepository {
     }
 
     async updateTheme(
-        id: number,
+        id: string,
         name: Theme['name'],
         themePath: Theme['themePath']
     ): Promise<void> {
@@ -55,7 +66,7 @@ export class ThemeService implements ThemeRepository {
         ).run(name, themePath, id);
     }
 
-    async deleteTheme(id: number): Promise<void> {
+    async deleteTheme(id: string): Promise<void> {
         const theme = await this.getThemeById(id);
         if (!theme) throw new Error('No theme found');
 
