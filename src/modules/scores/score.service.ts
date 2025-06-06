@@ -4,7 +4,12 @@ import { Subject } from '../../models/Subject';
 import { Theme } from '../../models/Theme';
 import { User } from '../../models/User';
 import { db } from '../../database/database';
-import { formattedDate } from '../../lib/helpers/general-helpers';
+import {
+    formatDateToISODateString,
+    formatDateToString,
+    subjectExsits,
+    themeExsits,
+} from '../../lib/helpers/general-helpers';
 
 export class ScoreService implements ScoreRepository {
     async addUserScore(score: Omit<Score, 'id'>): Promise<void> {
@@ -28,11 +33,12 @@ export class ScoreService implements ScoreRepository {
         const scores = db.prepare('SELECT * FROM scores').all() as Score[];
         if (!scores) throw new Error('No scores found');
 
-        const today = formattedDate(new Date());
+        const today = formatDateToISODateString(new Date());
 
-        const dailyScores = scores.filter(
-            (score) => score.date.toISOString().split('T')[0] === today
-        );
+        const dailyScores = scores.filter((score) => {
+            const date = formatDateToString(score.date);
+            return date === today;
+        });
 
         return dailyScores;
     }
@@ -40,9 +46,10 @@ export class ScoreService implements ScoreRepository {
     async getUserGlobalScore(userId: User['id']): Promise<Score[]> {
         const scores = db
             .prepare('SELECT * FROM scores WHERE user_id = ?')
-            .get(userId) as Score[];
+            .all(userId) as Score[];
 
         if (!scores) throw new Error('No score found');
+        console.log(scores);
 
         return scores;
     }
@@ -50,15 +57,18 @@ export class ScoreService implements ScoreRepository {
     async getUserDailyScore(userId: User['id']): Promise<Score[]> {
         const scores = db
             .prepare('SELECT * FROM scores WHERE user_id = ?')
-            .get(userId) as Score[];
+            .all(userId) as Score[];
 
         if (!scores) throw new Error('No score found');
 
-        const today = formattedDate(new Date());
+        const today = formatDateToISODateString(new Date());
 
-        const dailyScores = scores.filter(
-            (score) => score.date.toISOString().split('T')[0] === today
-        );
+        console.log(typeof scores);
+
+        const dailyScores = scores.filter((score) => {
+            const date = formatDateToString(score.date);
+            return date === today;
+        });
 
         return dailyScores;
     }
@@ -69,15 +79,20 @@ export class ScoreService implements ScoreRepository {
     ): Promise<Score[]> {
         const scores = db
             .prepare('SELECT * FROM scores WHERE user_id = ? AND theme_id = ?')
-            .get(userId, themeId) as Score[];
+            .all(userId, themeId) as Score[];
 
+        if (!themeId) throw new Error('Theme is required');
+
+        const themeIsValid = themeExsits(themeId);
+        if (!themeIsValid) throw new Error('Theme does not exist');
         if (!scores) throw new Error('No scores found');
 
-        const today = formattedDate(new Date());
+        const today = formatDateToISODateString(new Date());
 
-        const dailyScores = scores.filter(
-            (score) => score.date.toISOString().split('T')[0] === today
-        );
+        const dailyScores = scores.filter((score) => {
+            const date = formatDateToString(score.date);
+            return date === today;
+        });
 
         return dailyScores;
     }
@@ -90,15 +105,21 @@ export class ScoreService implements ScoreRepository {
             .prepare(
                 'SELECT * FROM scores WHERE user_id = ? AND subject_id = ?'
             )
-            .get(userId, subjectId) as Score[];
+            .all(userId, subjectId) as Score[];
+        
+        if (!subjectId) throw new Error('Subject is required');
+        
+        const subjectIsValid = subjectExsits(subjectId);
+        if (!subjectIsValid) throw new Error('Subject does not exist');
 
         if (!scores) throw new Error('No scores found');
 
-        const today = formattedDate(new Date());
+        const today = formatDateToISODateString(new Date());
 
-        const dailyScores = scores.filter(
-            (score) => score.date.toISOString().split('T')[0] === today
-        );
+        const dailyScores = scores.filter((score) => {
+            const date = formatDateToString(score.date);
+            return date === today;
+        });
 
         return dailyScores;
     }
@@ -110,6 +131,11 @@ export class ScoreService implements ScoreRepository {
         const scores = db
             .prepare('SELECT * FROM scores WHERE user_id = ? AND theme_id = ?')
             .get(userId, themeId) as Score[];
+        
+        if (!themeId) throw new Error('Theme is required');
+        
+        const themeIsValid = themeExsits(themeId);
+        if (!themeIsValid) throw new Error('Theme does not exist');
 
         if (!scores) throw new Error('No scores found');
 
@@ -125,6 +151,11 @@ export class ScoreService implements ScoreRepository {
                 'SELECT * FROM scores WHERE user_id = ? AND subject_id = ?'
             )
             .get(userId, subjectId) as Score[];
+
+        if (!subjectId) throw new Error('Subject is required');
+
+        const subjectIsValid = subjectExsits(subjectId);
+        if (!subjectIsValid) throw new Error('Subject does not exist');
 
         if (!scores) throw new Error('No scores found');
 
