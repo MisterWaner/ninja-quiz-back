@@ -10,6 +10,7 @@ import {
     subjectExsits,
     themeExsits,
 } from '../../lib/helpers/general-helpers';
+import type { UserGlobalScore, UserDailyScore } from '../../types/entities';
 
 export class ScoreService implements ScoreRepository {
     async addUserScore(score: Omit<Score, 'id'>): Promise<void> {
@@ -21,24 +22,56 @@ export class ScoreService implements ScoreRepository {
         ).run(userId, themeId, subjectId, value, date);
     }
 
-    async getUsersGlobalScore(): Promise<Score[]> {
-        const scores = db.prepare('SELECT * FROM scores').all() as Score[];
+    async getUsersGlobalScore(): Promise<UserGlobalScore[]> {
+        const scores = db
+            .prepare(
+                `
+                SELECT 
+                    users.id as userId, 
+                    users.username, 
+                    SUM(scores.value) as totalScore 
+                FROM scores 
+                INNER JOIN users ON scores.user_id = users.id 
+                GROUP BY scores.user_id 
+                ORDER BY totalScore DESC
+            `
+            )
+            .all() as UserGlobalScore[];
 
-        if (!scores) throw new Error('No scores found');
+        if (!scores.length) throw new Error('No scores found');
 
         return scores;
     }
 
-    async getUsersDailyScore(): Promise<Score[]> {
-        const scores = db.prepare('SELECT * FROM scores').all() as Score[];
-        if (!scores) throw new Error('No scores found');
+    async getUsersDailyScore(): Promise<UserDailyScore[]> {
+        const scores = db
+            .prepare(
+                `
+            SELECT 
+                users.id as userId, 
+                users.username, 
+                SUM(scores.value) as totalScore, 
+                scores.date as date
+            FROM scores 
+            INNER JOIN users ON scores.user_id = users.id 
+            GROUP BY scores.user_id , scores.date
+            ORDER BY totalScore DESC
+        `
+            )
+            .all() as UserDailyScore[];
+        
+        if (!scores.length) throw new Error('No scores found');
 
-        const today = formatDateToISODateString(new Date());
+        const today = formatDateToISODateString(new Date())
+        
+        
 
         const dailyScores = scores.filter((score) => {
-            const date = formatDateToString(score.date);
-            return date === today;
+            const date = formatDateToISODateString(new Date(score.date));
+            return date === today
         });
+  
+        if (!dailyScores.length) throw new Error('No scores found for today');
 
         return dailyScores;
     }
@@ -106,9 +139,9 @@ export class ScoreService implements ScoreRepository {
                 'SELECT * FROM scores WHERE user_id = ? AND subject_id = ?'
             )
             .all(userId, subjectId) as Score[];
-        
+
         if (!subjectId) throw new Error('Subject is required');
-        
+
         const subjectIsValid = subjectExsits(subjectId);
         if (!subjectIsValid) throw new Error('Subject does not exist');
 
@@ -131,9 +164,9 @@ export class ScoreService implements ScoreRepository {
         const scores = db
             .prepare('SELECT * FROM scores WHERE user_id = ? AND theme_id = ?')
             .get(userId, themeId) as Score[];
-        
+
         if (!themeId) throw new Error('Theme is required');
-        
+
         const themeIsValid = themeExsits(themeId);
         if (!themeIsValid) throw new Error('Theme does not exist');
 

@@ -75,7 +75,7 @@ export class SubjectService implements SubjectRepository {
                     s.name AS subject_name,
                     s.subjectPath AS subject_path,
                     COALESCE(json_group_array(
-                        json_object('id', t.id, 'name', t.name, 'themePath', t.themePath)
+                        json_object('id', t.id, 'name', t.name, 'themePath', t.themePath) ORDER BY t.id
                     ), '[]') AS themes
                 FROM subjects s
                 LEFT JOIN themes t ON s.id = t.subject_id

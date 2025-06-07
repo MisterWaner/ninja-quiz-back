@@ -5,17 +5,18 @@ import { Score } from '../models/Score';
 import { User } from '../models/User';
 import { Theme } from '../models/Theme';
 import { Subject } from '../models/Subject';
+import type { UserGlobalScore, UserDailyScore } from '../types/entities';
 
 const scoreService = new ScoreService();
 const scoreController = new ScoreController(scoreService);
 
 export async function scoresRouter(fastify: FastifyInstance) {
-    fastify.get<{ Reply: Score[] }>(
+    fastify.get<{ Reply: UserGlobalScore[] }>(
         '/global',
         scoreController.getUsersGlobalScore
     );
 
-    fastify.get<{ Reply: Score[] }>(
+    fastify.get<{ Reply: UserDailyScore[] }>(
         '/daily',
         scoreController.getUsersDailyScore
     );

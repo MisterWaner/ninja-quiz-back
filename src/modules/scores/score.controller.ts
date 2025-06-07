@@ -8,10 +8,13 @@ import { Theme } from '../../models/Theme';
 export class ScoreController {
     constructor(private scoreService: ScoreService) {}
 
-    addScore = async (request: FastifyRequest, reply: FastifyReply): Promise<void> => {
+    addScore = async (
+        request: FastifyRequest,
+        reply: FastifyReply
+    ): Promise<void> => {
         try {
             const { userId, themeId, subjectId, value } = request.body as Score;
-            const date = new Date()
+            const date = new Date();
 
             await this.scoreService.addUserScore({
                 userId,
@@ -24,7 +27,7 @@ export class ScoreController {
         } catch (error) {
             reply.status(500).send(error);
         }
-    }
+    };
 
     getUsersGlobalScore = async (
         request: FastifyRequest,
@@ -32,13 +35,13 @@ export class ScoreController {
     ): Promise<void> => {
         try {
             const scores = await this.scoreService.getUsersGlobalScore();
-            if (!scores) reply.status(404).send('No scores found');
+            if (!scores.length) reply.status(404).send('No scores found');
 
             reply.status(200).send(scores);
         } catch (error) {
             reply.status(500).send(error);
         }
-    }
+    };
 
     getUsersDailyScore = async (
         request: FastifyRequest,
@@ -46,13 +49,13 @@ export class ScoreController {
     ): Promise<void> => {
         try {
             const scores = await this.scoreService.getUsersDailyScore();
-            if (!scores) reply.status(404).send('No scores found');
+            if (!scores.length) reply.status(404).send('No scores found');
 
             reply.status(200).send(scores);
         } catch (error) {
             reply.status(500).send(error);
         }
-    }
+    };
 
     getUserGlobalScore = async (
         request: FastifyRequest<{ Params: { userId: User['id'] } }>,
@@ -67,7 +70,7 @@ export class ScoreController {
         } catch (error) {
             reply.status(500).send(error);
         }
-    }
+    };
 
     getUserDailyScore = async (
         request: FastifyRequest<{ Params: { userId: User['id'] } }>,
@@ -82,7 +85,7 @@ export class ScoreController {
         } catch (error) {
             reply.status(500).send(error);
         }
-    }
+    };
 
     getUserDailyScoresByTheme = async (
         request: FastifyRequest<{
@@ -104,7 +107,7 @@ export class ScoreController {
         } catch (error) {
             reply.status(500).send(error);
         }
-    }
+    };
 
     getUserDailyScoresBySubject = async (
         request: FastifyRequest<{
@@ -126,7 +129,7 @@ export class ScoreController {
         } catch (error) {
             reply.status(500).send(error);
         }
-    }
+    };
 
     getUserGlobalScoresByTheme = async (
         request: FastifyRequest<{
@@ -148,7 +151,7 @@ export class ScoreController {
         } catch (error) {
             reply.status(500).send(error);
         }
-    }
+    };
 
     getUserGlobalScoresBySubject = async (
         request: FastifyRequest<{
@@ -170,5 +173,5 @@ export class ScoreController {
         } catch (error) {
             reply.status(500).send(error);
         }
-    }
+    };
 }
