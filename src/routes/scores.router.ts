@@ -33,9 +33,11 @@ export async function scoresRouter(fastify: FastifyInstance) {
 
     fastify.get<{
         Params: { userId: User['id'] };
-        Querystring: { themeId: Theme['id'] };
         Reply: Score[];
-    }>('/:userId/daily/by-theme/:themeId', scoreController.getUserDailyScoresByTheme);
+    }>(
+        '/:userId/daily/by-theme',
+        scoreController.getUserDailyScoresSortedByTheme
+    );
 
     fastify.get<{
         Params: { userId: User['id'] };
@@ -48,17 +50,18 @@ export async function scoresRouter(fastify: FastifyInstance) {
 
     fastify.get<{
         Params: { userId: User['id'] };
-        Querystring: { themeId: Theme['id'] };
         Reply: Score[];
-    }>('/:userId/global/by-theme/:themeId', scoreController.getUserGlobalScoresByTheme);
+    }>(
+        '/:userId/global/by-theme',
+        scoreController.getUserGlobalScoresSortedByTheme
+    );
 
     fastify.get<{
         Params: { userId: User['id'] };
-        Querystring: { subjectId: Subject['id'] };
         Reply: Score[];
     }>(
-        '/:userId/global/by-subject/:subjectId',
-        scoreController.getUserGlobalScoresBySubject
+        '/:userId/global/by-subject',
+        scoreController.getUserGlobalScoresSortedBySubject
     );
 
     fastify.post('/', scoreController.addScore);

@@ -87,19 +87,16 @@ export class ScoreController {
         }
     };
 
-    getUserDailyScoresByTheme = async (
+    getUserDailyScoresSortedByTheme = async (
         request: FastifyRequest<{
             Params: { userId: User['id'] };
-            Querystring: { themeId: Theme['id'] };
         }>,
         reply: FastifyReply
     ): Promise<void> => {
         try {
             const { userId } = request.params;
-            const { themeId } = request.query;
-            const scores = await this.scoreService.getUserDailyScoresByTheme(
+            const scores = await this.scoreService.getUserDailyScoresSortedByTheme(
                 userId,
-                themeId
             );
             if (!scores) reply.status(404).send('No scores found');
 
@@ -131,19 +128,16 @@ export class ScoreController {
         }
     };
 
-    getUserGlobalScoresByTheme = async (
+    getUserGlobalScoresSortedByTheme = async (
         request: FastifyRequest<{
             Params: { userId: User['id'] };
-            Querystring: { themeId: Theme['id'] };
         }>,
         reply: FastifyReply
     ): Promise<void> => {
         try {
             const { userId } = request.params;
-            const { themeId } = request.query;
-            const scores = await this.scoreService.getUserGlobalScoresByTheme(
+            const scores = await this.scoreService.getUserGlobalScoresSortedByTheme(
                 userId,
-                themeId
             );
             if (!scores) reply.status(404).send('No scores found');
 
@@ -153,19 +147,16 @@ export class ScoreController {
         }
     };
 
-    getUserGlobalScoresBySubject = async (
+    getUserGlobalScoresSortedBySubject = async (
         request: FastifyRequest<{
             Params: { userId: User['id'] };
-            Querystring: { subjectId: Subject['id'] };
         }>,
         reply: FastifyReply
     ): Promise<void> => {
         try {
             const { userId } = request.params;
-            const { subjectId } = request.query;
-            const scores = await this.scoreService.getUserGlobalScoresBySubject(
+            const scores = await this.scoreService.getUserGlobalScoresSortedBySubject(
                 userId,
-                subjectId
             );
             if (!scores) reply.status(404).send('No scores found');
 

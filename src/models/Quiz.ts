@@ -13,7 +13,7 @@ export class Quiz {
             | DirectQuestion[]
             | MultipleChoiceQuestion[]
             | TrueFalseQuestion[],
-        public theme: Theme['name']
+        public theme: Theme['name'],
     ) {
         this.id = id;
         this.questionType = questionType;

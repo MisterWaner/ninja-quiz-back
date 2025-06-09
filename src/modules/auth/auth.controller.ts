@@ -74,7 +74,6 @@ export class AuthController {
                     httpOnly: true,
                     sameSite: 'strict',
                     secure: true,
-                    maxAge: 60 * 60 * 24, // 24 hours
                 })
                 .status(200)
                 .send({ message: 'Authentifié avec succès', token });

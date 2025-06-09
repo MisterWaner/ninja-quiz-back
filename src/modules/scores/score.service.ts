@@ -8,7 +8,6 @@ import {
     formatDateToISODateString,
     formatDateToString,
     subjectExsits,
-    themeExsits,
 } from '../../lib/helpers/general-helpers';
 import type { UserGlobalScore, UserDailyScore } from '../../types/entities';
 
@@ -59,18 +58,16 @@ export class ScoreService implements ScoreRepository {
         `
             )
             .all() as UserDailyScore[];
-        
+
         if (!scores.length) throw new Error('No scores found');
 
-        const today = formatDateToISODateString(new Date())
-        
-        
+        const today = formatDateToISODateString(new Date());
 
         const dailyScores = scores.filter((score) => {
             const date = formatDateToISODateString(new Date(score.date));
-            return date === today
+            return date === today;
         });
-  
+
         if (!dailyScores.length) throw new Error('No scores found for today');
 
         return dailyScores;
@@ -106,18 +103,15 @@ export class ScoreService implements ScoreRepository {
         return dailyScores;
     }
 
-    async getUserDailyScoresByTheme(
-        userId: User['id'],
-        themeId: Theme['id']
+    async getUserDailyScoresSortedByTheme(
+        userId: User['id']
     ): Promise<Score[]> {
         const scores = db
-            .prepare('SELECT * FROM scores WHERE user_id = ? AND theme_id = ?')
-            .all(userId, themeId) as Score[];
+            .prepare(
+                'SELECT * FROM scores WHERE user_id = ? ORDER BY theme_id DESC'
+            )
+            .all(userId) as Score[];
 
-        if (!themeId) throw new Error('Theme is required');
-
-        const themeIsValid = themeExsits(themeId);
-        if (!themeIsValid) throw new Error('Theme does not exist');
         if (!scores) throw new Error('No scores found');
 
         const today = formatDateToISODateString(new Date());
@@ -157,38 +151,44 @@ export class ScoreService implements ScoreRepository {
         return dailyScores;
     }
 
-    async getUserGlobalScoresByTheme(
-        userId: User['id'],
-        themeId: Theme['id']
+    async getUserGlobalScoresSortedByTheme(
+        userId: User['id']
     ): Promise<Score[]> {
         const scores = db
-            .prepare('SELECT * FROM scores WHERE user_id = ? AND theme_id = ?')
-            .get(userId, themeId) as Score[];
-
-        if (!themeId) throw new Error('Theme is required');
-
-        const themeIsValid = themeExsits(themeId);
-        if (!themeIsValid) throw new Error('Theme does not exist');
+            .prepare(
+                `
+                SELECT t.name as themeName, 
+                SUM(s.value) as totalScore 
+                FROM scores s 
+                JOIN themes t ON s.theme_id = t.id 
+                WHERE s.user_id = ? 
+                GROUP BY s.theme_id
+                ORDER BY t.name ASC
+            `
+            )
+            .all(userId) as Score[];
 
         if (!scores) throw new Error('No scores found');
 
         return scores;
     }
 
-    async getUserGlobalScoresBySubject(
+    async getUserGlobalScoresSortedBySubject(
         userId: User['id'],
-        subjectId: Subject['id']
     ): Promise<Score[]> {
         const scores = db
             .prepare(
-                'SELECT * FROM scores WHERE user_id = ? AND subject_id = ?'
+                `
+                SELECT subj.name as subjectName,
+                SUM(s.value) as totalScore
+                FROM scores s
+                JOIN subjects subj ON s.subject_id = subj.id
+                WHERE s.user_id = ?
+                GROUP BY s.subject_id
+                ORDER BY subj.name ASC
+            `
             )
-            .get(userId, subjectId) as Score[];
-
-        if (!subjectId) throw new Error('Subject is required');
-
-        const subjectIsValid = subjectExsits(subjectId);
-        if (!subjectIsValid) throw new Error('Subject does not exist');
+            .all(userId) as Score[];
 
         if (!scores) throw new Error('No scores found');
 
