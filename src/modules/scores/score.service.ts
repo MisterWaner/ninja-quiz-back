@@ -50,16 +50,18 @@ export class ScoreService implements ScoreRepository {
                 users.id as userId, 
                 users.username, 
                 SUM(scores.value) as totalScore, 
-                scores.date as date
+                DATE(scores.date) as date
             FROM scores 
-            INNER JOIN users ON scores.user_id = users.id 
-            GROUP BY scores.user_id , scores.date
+            INNER JOIN users ON scores.user_id = users.id
+            GROUP BY scores.user_id , DATE(scores.date)
             ORDER BY totalScore DESC
         `
             )
             .all() as UserDailyScore[];
 
         if (!scores.length) throw new Error('No scores found');
+
+        console.log(scores);
 
         const today = formatDateToISODateString(new Date());
 

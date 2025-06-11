@@ -23,7 +23,7 @@ export class ScoreController {
                 value,
                 date,
             });
-            reply.status(201).send('Score added');
+            reply.status(201).send({ message: 'Score added' });
         } catch (error) {
             reply.status(500).send(error);
         }

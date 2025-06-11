@@ -7,6 +7,9 @@ import { SubjectService } from '../subjects/subject.service';
 const subjectService = new SubjectService();
 
 export class ThemeService implements ThemeRepository {
+    static getThemeByName(theme: string) {
+        throw new Error('Method not implemented.');
+    }
     async createTheme(theme: Theme): Promise<void> {
         const subjectName = await subjectService.getSubjectById(
             theme.subjectId
@@ -50,6 +53,16 @@ export class ThemeService implements ThemeRepository {
         if (!theme) throw new Error('No theme found');
 
         return theme;
+    }
+
+    async getThemeByNameAndReturnId(name: Theme['name']): Promise<Theme['id']> {
+        const theme = db
+            .prepare('SELECT * FROM themes WHERE name = ?')
+            .get(name) as Theme;
+
+        if (!theme) throw new Error('No theme found');
+
+        return theme.id;
     }
 
     async updateTheme(

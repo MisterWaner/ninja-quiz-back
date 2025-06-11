@@ -4,6 +4,7 @@ import {
     TrueFalseQuestion,
     MultipleChoiceQuestion,
 } from './Question';
+import { Subject } from './Subject';
 
 export class Quiz {
     constructor(
@@ -14,10 +15,14 @@ export class Quiz {
             | MultipleChoiceQuestion[]
             | TrueFalseQuestion[],
         public theme: Theme['name'],
+        public themeId: Theme['id'],
+        public subjectId: Subject['id'],
     ) {
         this.id = id;
         this.questionType = questionType;
         this.questions = questions;
         this.theme = theme;
+        this.themeId = themeId;
+        this.subjectId = subjectId;
     }
 }
