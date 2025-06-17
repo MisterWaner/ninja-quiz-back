@@ -1,7 +1,6 @@
 import { Score } from '../../models/Score';
 import { ScoreRepository } from '../../application/score.repository';
 import { Subject } from '../../models/Subject';
-import { Theme } from '../../models/Theme';
 import { User } from '../../models/User';
 import { db } from '../../database/database';
 import {

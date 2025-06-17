@@ -1,6 +1,6 @@
 import { Theme } from '../../models/Theme';
 import { ThemeRepository } from '../../application/theme.repository';
-import { db } from '../../database/database';
+import pool from '../../database/config';
 import { normalizedString } from '../../lib/helpers/general-helpers';
 import { SubjectService } from '../subjects/subject.service';
 
@@ -11,17 +11,22 @@ export class ThemeService implements ThemeRepository {
         throw new Error('Method not implemented.');
     }
     async createTheme(theme: Theme): Promise<void> {
-        const subjectName = await subjectService.getSubjectById(
-            theme.subjectId
-        ).then((s) => s.name);
+        const subjectName = await subjectService
+            .getSubjectById(theme.subjectId)
+            .then((s) => s.name);
         if (!subjectName) throw new Error('Subject not found');
 
-        const prefix = normalizedString(subjectName).substring(0, 4).toUpperCase();
-        const result = db.prepare('SELECT COUNT(*) AS count FROM themes WHERE subject_id = ?').get(theme.subjectId) as { count: number };
-        const existingCount = result.count;
+        const prefix = normalizedString(subjectName)
+            .substring(0, 4)
+            .toUpperCase();
+        const result = await pool.query<{ count: number }>(
+            'SELECT COUNT(*) AS count FROM themes WHERE subject_id = $1',
+            [theme.subjectId]
+        );
+        const existingCount = result.rows[0].count;
 
         const id = `${prefix}_${existingCount + 1}`;
-        
+
         const { name, subjectId } = theme;
         const themePath = normalizedString(name);
         const subjectExists = (await subjectService.getSubjects()).find(
@@ -32,13 +37,21 @@ export class ThemeService implements ThemeRepository {
             throw new Error('Subject not found');
         }
 
-        db.prepare(
-            'INSERT INTO themes (id, name, subject_id, themePath) VALUES (?,?, ?, ?)'
-        ).run(id, name, subjectId, themePath);
+        await pool.query(
+            `INSERT INTO themes (id, name, subject_id, themePath) VALUES ($1, $2, $3, $4)`,
+            [id, name, subjectId, themePath]
+        );
     }
 
     async getThemes(): Promise<Theme[]> {
-        const themes = db.prepare('SELECT * FROM themes').all() as Theme[];
+        const result = await pool.query('SELECT * FROM themes');
+
+        const themes = result.rows.map((row) => ({
+            id: row.id,
+            name: row.name,
+            themePath: row.themePath,
+            subjectId: row.subject_id,
+        })) as Theme[];
 
         if (!themes) throw new Error('No themes found');
 
@@ -46,9 +59,13 @@ export class ThemeService implements ThemeRepository {
     }
 
     async getThemeById(id: string): Promise<Theme> {
-        const theme = db
-            .prepare('SELECT * FROM themes WHERE id = ?')
-            .get(id) as Theme;
+        const result = await pool.query<Theme>(
+            `
+            SELECT * FROM themes WHERE id = $1`,
+            [id]
+        );
+
+        const theme = result.rows[0];
 
         if (!theme) throw new Error('No theme found');
 
@@ -56,10 +73,12 @@ export class ThemeService implements ThemeRepository {
     }
 
     async getThemeByNameAndReturnId(name: Theme['name']): Promise<Theme['id']> {
-        const theme = db
-            .prepare('SELECT * FROM themes WHERE name = ?')
-            .get(name) as Theme;
+        const result = await pool.query<Theme>(
+            'SELECT * FROM themes WHERE name = $1',
+            [name]
+        );
 
+        const theme = result.rows[0];
         if (!theme) throw new Error('No theme found');
 
         return theme.id;
@@ -74,20 +93,21 @@ export class ThemeService implements ThemeRepository {
 
         if (!theme) throw new Error('No theme found');
 
-        db.prepare(
-            'UPDATE themes SET name = ?, themePath = ? WHERE id = ?'
-        ).run(name, themePath, id);
+        await pool.query(
+            'UPDATE themes SET name = $1, themePath = $2 WHERE id = $3',
+            [name, themePath, id]
+        );
     }
 
     async deleteTheme(id: string): Promise<void> {
         const theme = await this.getThemeById(id);
         if (!theme) throw new Error('No theme found');
 
-        db.prepare('DELETE FROM themes WHERE id = ?').run(id);
+        await pool.query('DELETE FROM themes WHERE id = $1', [id]);
     }
 
     async reset(): Promise<void> {
-        db.prepare('DELETE FROM themes').run();
-        db.prepare(`DELETE FROM sqlite_sequence WHERE name = 'themes'`).run();
+        await pool.query('DELETE FROM themes');
+        await pool.query('ALTER SEQUENCE themes_id_seq RESTART WITH 1');
     }
 }
