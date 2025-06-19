@@ -24,8 +24,9 @@ export class ThemeService implements ThemeRepository {
             [theme.subjectId]
         );
         const existingCount = result.rows[0].count;
+        console.log(existingCount);
 
-        const id = `${prefix}_${existingCount + 1}`;
+        const id = `${prefix}_${existingCount}`;
 
         const { name, subjectId } = theme;
         const themePath = normalizedString(name);

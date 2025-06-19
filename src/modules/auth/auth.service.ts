@@ -1,6 +1,6 @@
 import { User } from '../../models/User';
 import { AuthRepository } from '../../application/auth.repository';
-import { db } from '../../database/database';
+import pool from '../../database/config';
 import { hashPassword, comparePassword } from '../../lib/helpers/auth-helpers';
 import { generateStringId } from '../../lib/id-generators';
 
@@ -9,18 +9,22 @@ export class AuthService implements AuthRepository {
         const id = generateStringId();
         const hashedPassword = await hashPassword(password);
 
-        db.prepare(
-            'INSERT INTO users (id, username, password) VALUES (?, ?, ?)'
-        ).run(id, username, hashedPassword);
+        await pool.query(
+            `INSERT INTO users (id, username, password) VALUES ($1, $2, $3)`,
+            [id, username, hashedPassword]
+        );
     }
 
     async authenticateUser(
         username: string,
         password: string
     ): Promise<User | null> {
-        const user = db
-            .prepare('SELECT * FROM users WHERE username = ?')
-            .get(username) as User;
+        const result = await pool.query(
+            `SELECT * FROM users WHERE username = $1`,
+            [username]
+        );
+
+        const user = result.rows[0];
 
         if (!user) return null;
 

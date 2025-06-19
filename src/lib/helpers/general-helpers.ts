@@ -1,4 +1,4 @@
-import { db } from "../../database/database";
+import pool from '../../database/config';
 import { Subject } from "../../models/Subject";
 import { Theme } from "../../models/Theme";
 
@@ -23,13 +23,19 @@ export function formatDateToString(date: Date): string {
 }
 
 export function subjectExsits(subjectId: Subject['id']): boolean {
-    const subject = db.prepare('SELECT 1 FROM subjects WHERE id = ?').get(subjectId) as Subject;
+    const subject = pool.query<Subject>(
+        'SELECT 1 FROM subjects WHERE id = $1',
+        [subjectId]
+    );
 
     return !!subject;
 }
 
 export function themeExsits(themeId: Theme['id']): boolean {
-    const theme = db.prepare('SELECT 1 FROM themes WHERE id = ?').get(themeId) as Theme;
+    const theme = pool.query<Theme>(
+        'SELECT 1 FROM themes WHERE id = $1',
+        [themeId]
+    );
 
     return !!theme;
 }

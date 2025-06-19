@@ -1,6 +1,6 @@
 import fastifyApp from './app';
 import { config } from 'dotenv';
-import { init, isDatabaseEmpty } from './database/database';
+import { runDatabase, isDatabaseEmpty } from './database/init';
 import { seedDatabase } from './database/seed';
 
 config();
@@ -12,12 +12,8 @@ async function startServer() {
         await fastifyApp.listen({ port: PORT });
         console.log(`Server is running on port ${PORT}`);
 
-        init();
-
-        if (isDatabaseEmpty()) {
-            console.log('🌱 Base de données vide, seeding...');
-            await seedDatabase();
-        }
+        await runDatabase();
+        
     } catch (error) {
         console.error(error);
         process.exit(1);

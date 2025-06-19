@@ -1,20 +1,28 @@
 import { User } from '../../models/User';
 import { UserRepository } from '../../application/user.repository';
-import { db } from '../../database/database';
+import pool from '../../database/config';
 import { hashPassword } from '../../lib/helpers/auth-helpers';
 
 export class UserService implements UserRepository {
     async getUserById(id: string): Promise<User | null> {
-        const user = db
-            .prepare('SELECT * FROM users WHERE id = ?')
-            .get(id) as User;
+        const result = await pool.query<User>(
+            'SELECT * FROM users WHERE id = $1',
+            [id]
+        );
+
+        const user = result.rows[0];
+
+        if (!user) throw new Error('User not found');
         return user;
     }
 
     async getUserByUsername(username: string): Promise<User | null> {
-        const user = db
-            .prepare('SELECT * FROM users WHERE username = ?')
-            .get(username) as User;
+        const result = await pool.query<User>(
+            'SELECT * FROM users WHERE username = $1',
+            [username]
+        );
+
+        const user = result.rows[0];
 
         if (!user) throw new Error('User not found');
 
@@ -22,7 +30,15 @@ export class UserService implements UserRepository {
     }
 
     async getUsers(): Promise<User[]> {
-        const users = db.prepare('SELECT * FROM users').all() as User[];
+        const result = await pool.query('SELECT * FROM users');
+        const users = result.rows.map((row) => ({
+            id: row.id,
+            username: row.username,
+            password: row.password,
+        })) as User[];
+
+        if (!users) throw new Error('No users found');
+
         return users;
     }
 
@@ -30,10 +46,10 @@ export class UserService implements UserRepository {
         const user = await this.getUserById(id);
         if (!user) throw new Error('User not found');
 
-        db.prepare('UPDATE users SET username = ? WHERE id = ?').run(
+        await pool.query('UPDATE users SET username = $1 WHERE id = $2', [
             username,
-            id
-        );
+            id,
+        ]);
     }
 
     async updateUserPassword(id: string, password: string): Promise<void> {
@@ -42,9 +58,9 @@ export class UserService implements UserRepository {
 
         const hashedPassword = await hashPassword(password);
 
-        db.prepare('UPDATE users SET password = ? WHERE id = ?').run(
-            hashedPassword,
-            id
+        await pool.query(
+            'UPDATE users SET password = $1 WHERE id = $2',
+            [hashedPassword, id]
         );
     }
 
@@ -52,6 +68,6 @@ export class UserService implements UserRepository {
         const user = this.getUserById(id);
         if (!user) throw new Error('User not found');
 
-        db.prepare('DELETE FROM users WHERE id = ?').run(id);
+        await pool.query('DELETE FROM users WHERE id = $1', [id]);
     }
 }

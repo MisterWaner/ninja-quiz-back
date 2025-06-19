@@ -7,7 +7,7 @@ export class SubjectService implements SubjectRepository {
     async createSubject(subject: Subject): Promise<void> {
         const { name } = subject;
         const subjectPath = normalizedString(name);
-        pool.query(`INSERT INTO subjects (name, subjectPath) VALUES ($1, $2)`, [
+        await pool.query(`INSERT INTO subjects (name, subjectPath) VALUES ($1, $2)`, [
             name,
             subjectPath,
         ]);

@@ -2,6 +2,7 @@ import { Pool } from 'pg';
 import { config } from 'dotenv';
 import pool from './config';
 import * as fs from 'fs/promises';
+import { seedDatabase } from './seed';
 
 config();
 
@@ -40,12 +41,14 @@ async function initDatabase() {
 async function initSchema() {
     try {
         const sql = await fs.readFile('./src/database/quiz.sql', 'utf8');
-        await pool.query(sql);
+        const queries = sql.split(';').map((query) => query.trim()).filter((query) => query.length > 0);
+
+        for (const query of queries) {
+            await pool.query(query);
+        }
         console.log('✅ Le schéma a été créé');
     } catch (error) {
         console.error('Erreur lors de la création du schéma', error);
-    } finally {
-        pool.end();
     }
 }
 
@@ -58,7 +61,14 @@ export async function isDatabaseEmpty(): Promise<boolean> {
     return count === 0;
 }
 
-export async function run() {
+export async function runDatabase() {
     await initDatabase();
     await initSchema();
+    const empty = await isDatabaseEmpty();
+    if (empty) {
+        console.log('🌱 La base de données est vide, seeding...');
+        await seedDatabase();
+    }
+    console.log('✅ La base de données est prête');
+    pool.end();
 }
