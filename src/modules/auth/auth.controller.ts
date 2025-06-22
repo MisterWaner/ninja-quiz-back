@@ -42,6 +42,7 @@ export class AuthController {
             reply.status(200).send({ message: 'Compte créé avec succès' });
         } catch (error) {
             reply.status(500).send({ message: 'Erreur interne' });
+            console.error(error);
         }
     };
 

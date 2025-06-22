@@ -18,7 +18,7 @@ export class CapitalsQuizController {
         const id = generateNumberId();
         const questionType = 'multiple';
         const length: number = 10;
-        const theme = 'european-capitals';
+        const theme = 'Capitales européennes';
         const themeId = await themeService.getThemeByNameAndReturnId(theme);
         const questions: MultipleChoiceQuestion[] = await Promise.all(
             Array.from({ length }, () =>
@@ -38,7 +38,7 @@ export class CapitalsQuizController {
         const id = generateNumberId();
         const questionType = 'multiple';
         const length: number = 10;
-        const theme = 'african-capitals';
+        const theme = 'Capitales africaines';
         const themeId = await themeService.getThemeByNameAndReturnId(theme);
         const questions: MultipleChoiceQuestion[] = await Promise.all(
             Array.from({ length }, () =>
@@ -55,7 +55,7 @@ export class CapitalsQuizController {
         const id = generateNumberId();
         const questionType = 'multiple';
         const length: number = 10;
-        const theme = 'asian-capitals';
+        const theme = 'Capitales asiatiques';
         const themeId = await themeService.getThemeByNameAndReturnId(theme);
         const questions: MultipleChoiceQuestion[] = await Promise.all(
             Array.from({ length }, () =>
@@ -75,7 +75,7 @@ export class CapitalsQuizController {
         const id = generateNumberId();
         const questionType = 'multiple';
         const length: number = 10;
-        const theme = 'american-capitals';
+        const theme = 'Capitales américaines';
         const themeId = await themeService.getThemeByNameAndReturnId(theme);
         const questions: MultipleChoiceQuestion[] = await Promise.all(
             Array.from({ length }, () =>
@@ -95,7 +95,7 @@ export class CapitalsQuizController {
         const id = generateNumberId();
         const questionType = 'multiple';
         const length: number = 10;
-        const theme = 'oceanic-capitals';
+        const theme = 'Capitales océaniques';
         const themeId = await themeService.getThemeByNameAndReturnId(theme);
         const questions: MultipleChoiceQuestion[] = await Promise.all(
             Array.from({ length }, () =>
@@ -115,7 +115,7 @@ export class CapitalsQuizController {
         const id = generateNumberId();
         const questionType = 'multiple';
         const length: number = 10;
-        const theme = 'random-capitals';
+        const theme = 'Capitales aléatoires';
         const themeId = await themeService.getThemeByNameAndReturnId(theme);
         const questions: MultipleChoiceQuestion[] = await Promise.all(
             Array.from({ length }, () =>

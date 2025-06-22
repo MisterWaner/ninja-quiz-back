@@ -15,7 +15,7 @@ export class FlagsQuizController {
         const id = generateNumberId();
         const questionType = 'multiple';
         const length: number = 10;
-        const theme = 'european-flags';
+        const theme = 'Drapeaux européens';
         const themeId = await themeService.getThemeByNameAndReturnId(theme);
         const questions: MultipleChoiceQuestion[] = await Promise.all(
             Array.from({ length }, () =>
@@ -31,7 +31,7 @@ export class FlagsQuizController {
         const id = generateNumberId();
         const questionType = 'multiple';
         const length: number = 10;
-        const theme = 'african-flags';
+        const theme = 'Drapeaux africains';
         const themeId = await themeService.getThemeByNameAndReturnId(theme);
         const questions: MultipleChoiceQuestion[] = await Promise.all(
             Array.from({ length }, () =>
@@ -48,7 +48,7 @@ export class FlagsQuizController {
         const id = generateNumberId();
         const questionType = 'multiple';
         const length: number = 10;
-        const theme = 'asian-flags';
+        const theme = 'Drapeaux asiatiques';
         const themeId = await themeService.getThemeByNameAndReturnId(theme);
         const questions: MultipleChoiceQuestion[] = await Promise.all(
             Array.from({ length }, () =>
@@ -65,7 +65,7 @@ export class FlagsQuizController {
         const id = generateNumberId();
         const questionType = 'multiple';
         const length: number = 10;
-        const theme = 'american-flags';
+        const theme = 'Drapeaux américains';
         const themeId = await themeService.getThemeByNameAndReturnId(theme);
         const questions: MultipleChoiceQuestion[] = await Promise.all(
             Array.from({ length }, () =>
@@ -82,7 +82,7 @@ export class FlagsQuizController {
         const id = generateNumberId();
         const questionType = 'multiple';
         const length: number = 10;
-        const theme = 'oceanic-flags';
+        const theme = 'Drapeaux océaniques';
         const themeId = await themeService.getThemeByNameAndReturnId(theme);
         const questions: MultipleChoiceQuestion[] = await Promise.all(
             Array.from({ length }, () =>
@@ -99,7 +99,7 @@ export class FlagsQuizController {
         const id = generateNumberId();
         const questionType = 'multiple';
         const length: number = 10;
-        const theme = 'random-flags';
+        const theme = 'Drapeaux aléatoires';
         const themeId = await themeService.getThemeByNameAndReturnId(theme);
         const questions: MultipleChoiceQuestion[] = await Promise.all(
             Array.from({ length }, () =>

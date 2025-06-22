@@ -70,5 +70,4 @@ export async function runDatabase() {
         await seedDatabase();
     }
     console.log('✅ La base de données est prête');
-    pool.end();
 }

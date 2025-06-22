@@ -1,4 +1,5 @@
 import { Subject } from '../../models/Subject';
+import { Theme } from '../../models/Theme';
 import { SubjectRepository } from '../../application/subject.repository';
 import pool from '../../database/config';
 import { normalizedString } from '../../lib/helpers/general-helpers';
@@ -74,7 +75,7 @@ export class SubjectService implements SubjectRepository {
             subject_id: number;
             subject_name: string;
             subject_path: string;
-            themes: string;
+            themes: Theme[];
         }>(
             `
                 SELECT 
@@ -97,18 +98,18 @@ export class SubjectService implements SubjectRepository {
             `
         );
 
-        if (results.rows.length === 0) {
+        const subjectsWithThemes = results.rows.map((row) => ({
+            id: row.subject_id,
+            name: row.subject_name,
+            subjectPath: row.subject_path,
+            themes: row.themes,
+        }))
+
+        if (!subjectsWithThemes) {
             throw new Error('Subjects not found');
         }
 
-        const parsedSubjects = results.rows.map((subject) => ({
-            id: subject.subject_id,
-            name: subject.subject_name,
-            subjectPath: subject.subject_path,
-            themes: JSON.parse(subject.themes),
-        }));
-
-        return parsedSubjects;
+        return subjectsWithThemes;
     }
 
     async reset(): Promise<void> {
