@@ -3,12 +3,14 @@ import { ScoreRepository } from '../../application/score.repository';
 import { Subject } from '../../models/Subject';
 import { User } from '../../models/User';
 import pool from '../../database/config';
-import {
-    formatDateToISODateString,
-    formatDateToString,
-    subjectExsits,
-} from '../../lib/helpers/general-helpers';
-import type { UserGlobalScore, UserDailyScore } from '../../types/entities';
+import { subjectExsits } from '../../lib/helpers/general-helpers';
+import { mapScoreRow } from '../../lib/helpers/sql-helpers';
+import type {
+    UserGlobalScore,
+    UserDailyScore,
+    UserGlobalScoreSortedBySubject,
+    UserGlobalScoreSortedByTheme,
+} from '../../types/entities';
 
 export class ScoreService implements ScoreRepository {
     async addUserScore(score: Omit<Score, 'id'>): Promise<void> {
@@ -29,14 +31,14 @@ export class ScoreService implements ScoreRepository {
                     SUM(scores.value) as totalScore 
                 FROM scores 
                 INNER JOIN users ON scores.user_id = users.id 
-                GROUP BY scores.user_id 
+                GROUP BY scores.user_id, userId
                 ORDER BY totalScore DESC
             `);
 
         const scores = results.rows.map((row) => ({
-            userId: row.userId,
+            userId: row.userid,
             username: row.username,
-            totalScore: row.totalScore,
+            totalScore: row.totalscore,
         })) as UserGlobalScore[];
 
         if (!scores.length) throw new Error('No scores found');
@@ -49,31 +51,20 @@ export class ScoreService implements ScoreRepository {
             SELECT 
                 users.id as userId, 
                 users.username, 
-                SUM(scores.value) as totalScore, 
-                DATE(scores.date) as date
+                SUM(scores.value) as totalScore
             FROM scores 
             INNER JOIN users ON scores.user_id = users.id
-            GROUP BY scores.user_id , DATE(scores.date)
+            WHERE DATE(scores.date) = CURRENT_DATE
+            GROUP BY users.id, users.username
             ORDER BY totalScore DESC
             `);
 
-        const scores = results.rows.map((row) => ({
-            userId: row.userId,
+        const dailyScores = results.rows.map((row) => ({
+            userId: row.userid,
             username: row.username,
-            totalScore: row.totalScore,
+            totalScore: Number(row.totalscore),
             date: row.date,
         })) as UserDailyScore[];
-
-        if (!scores.length) throw new Error('No scores found');
-
-        console.log(scores);
-
-        const today = formatDateToISODateString(new Date());
-
-        const dailyScores = scores.filter((score) => {
-            const date = formatDateToISODateString(new Date(score.date));
-            return date === today;
-        });
 
         if (!dailyScores.length) throw new Error('No scores found for today');
 
@@ -86,46 +77,23 @@ export class ScoreService implements ScoreRepository {
             [userId]
         );
 
-        const scores = results.rows.map((row) => ({
-            id: row.id,
-            userId: row.user_id,
-            themeId: row.theme_id,
-            subjectId: row.subject_id,
-            value: row.value,
-            date: row.date,
-        })) as Score[];
+        const userGlobalScore = results.rows.map(mapScoreRow) as Score[];
 
-        if (!scores) throw new Error('No score found');
-        console.log(scores);
+        if (!userGlobalScore) throw new Error('No score found');
+        console.log(userGlobalScore);
 
-        return scores;
+        return userGlobalScore;
     }
 
     async getUserDailyScore(userId: User['id']): Promise<Score[]> {
         const results = await pool.query(
-            'SELECT * FROM scores WHERE user_id = $1',
+            'SELECT * FROM scores WHERE user_id = $1 AND DATE(date) = CURRENT_DATE',
             [userId]
         );
 
-        const scores = results.rows.map((row) => ({
-            id: row.id,
-            userId: row.user_id,
-            themeId: row.theme_id,
-            subjectId: row.subject_id,
-            value: row.value,
-            date: row.date,
-        })) as Score[];
+        const dailyScores = results.rows.map(mapScoreRow) as Score[];
 
-        if (!scores) throw new Error('No score found');
-
-        const today = formatDateToISODateString(new Date());
-
-        console.log(typeof scores);
-
-        const dailyScores = scores.filter((score) => {
-            const date = formatDateToString(score.date);
-            return date === today;
-        });
+        if (!dailyScores) throw new Error('No score found');
 
         return dailyScores;
     }
@@ -134,69 +102,45 @@ export class ScoreService implements ScoreRepository {
         userId: User['id']
     ): Promise<Score[]> {
         const results = await pool.query(
-            'SELECT * FROM scores WHERE user_id = $1 ORDER BY theme_id DESC',
+            'SELECT * FROM scores WHERE user_id = $1 AND DATE(date) = CURRENT_DATE ORDER BY theme_id DESC',
             [userId]
         );
 
-        const scores = results.rows.map((row) => ({
-            id: row.id,
-            userId: row.user_id,
-            themeId: row.theme_id,
-            subjectId: row.subject_id,
-            value: row.value,
-            date: row.date,
-        })) as Score[];
+        const userDailyScoresSortedByTheme = results.rows.map(
+            mapScoreRow
+        ) as Score[];
 
-        if (!scores) throw new Error('No scores found');
+        if (!userDailyScoresSortedByTheme) throw new Error('No scores found');
 
-        const today = formatDateToISODateString(new Date());
-
-        const dailyScores = scores.filter((score) => {
-            const date = formatDateToString(score.date);
-            return date === today;
-        });
-
-        return dailyScores;
+        return userDailyScoresSortedByTheme;
     }
 
     async getUserDailyScoresBySubject(
         userId: User['id'],
         subjectId: Subject['id']
     ): Promise<Score[]> {
-        const results = await pool.query(
-            'SELECT * FROM scores WHERE user_id = $1 AND subject_id = $2',
-            [userId, subjectId]
-        );
-
-        const scores = results.rows.map((row) => ({
-            id: row.id,
-            userId: row.user_id,
-            themeId: row.theme_id,
-            subjectId: row.subject_id,
-            value: row.value,
-            date: row.date,
-        })) as Score[];
-
         if (!subjectId) throw new Error('Subject is required');
 
         const subjectIsValid = subjectExsits(subjectId);
         if (!subjectIsValid) throw new Error('Subject does not exist');
 
-        if (!scores) throw new Error('No scores found');
+        const results = await pool.query(
+            'SELECT * FROM scores WHERE user_id = $1 AND subject_id = $2 AND DATE(date) = CURRENT_DATE',
+            [userId, subjectId]
+        );
 
-        const today = formatDateToISODateString(new Date());
+        const userDailyScoresBySubject = results.rows.map(
+            mapScoreRow
+        ) as Score[];
 
-        const dailyScores = scores.filter((score) => {
-            const date = formatDateToString(score.date);
-            return date === today;
-        });
+        if (!userDailyScoresBySubject) throw new Error('No scores found');
 
-        return dailyScores;
+        return userDailyScoresBySubject;
     }
 
     async getUserGlobalScoresSortedByTheme(
         userId: User['id']
-    ): Promise<Score[]> {
+    ): Promise<UserGlobalScoreSortedByTheme[]> {
         const results = await pool.query(
             `
             SELECT t.name as themeName, 
@@ -204,20 +148,18 @@ export class ScoreService implements ScoreRepository {
             FROM scores s 
             JOIN themes t ON s.theme_id = t.id 
             WHERE s.user_id = $1 
-            GROUP BY s.theme_id
+            GROUP BY s.theme_id, themeName
             ORDER BY t.name ASC
             `,
             [userId]
         );
 
         const scores = results.rows.map((row) => ({
-            id: row.id,
-            userId: row.user_id,
-            themeId: row.theme_id,
-            subjectId: row.subject_id,
-            value: row.value,
-            date: row.date,
-        })) as Score[];
+            userId: row.userid,
+            username: row.username,
+            totalScore: row.totalscore,
+            themeName: row.themename,
+        })) as UserGlobalScoreSortedByTheme[];
 
         if (!scores) throw new Error('No scores found');
 
@@ -226,7 +168,7 @@ export class ScoreService implements ScoreRepository {
 
     async getUserGlobalScoresSortedBySubject(
         userId: User['id']
-    ): Promise<Score[]> {
+    ): Promise<UserGlobalScoreSortedBySubject[]> {
         const results = await pool.query(
             `
             SELECT subj.name as subjectName,
@@ -234,20 +176,18 @@ export class ScoreService implements ScoreRepository {
             FROM scores s
             JOIN subjects subj ON s.subject_id = subj.id
             WHERE s.user_id = $1
-            GROUP BY s.subject_id
+            GROUP BY s.subject_id, subjectName
             ORDER BY subj.name ASC
             `,
             [userId]
         );
 
         const scores = results.rows.map((row) => ({
-            id: row.id,
-            userId: row.user_id,
-            themeId: row.theme_id,
-            subjectId: row.subject_id,
-            value: row.value,
-            date: row.date,
-        })) as Score[];
+            userId: row.userid,
+            username: row.username,
+            totalScore: row.totalscore,
+            subjectName: row.subjectname,
+        })) as UserGlobalScoreSortedBySubject[];
 
         if (!scores) throw new Error('No scores found');
 

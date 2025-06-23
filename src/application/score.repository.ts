@@ -1,6 +1,6 @@
 import { Score } from '../models/Score';
 import { User } from '../models/User';
-import type { UserGlobalScore, UserDailyScore } from '../types/entities';
+import type { UserGlobalScore, UserDailyScore, UserGlobalScoreSortedBySubject, UserGlobalScoreSortedByTheme } from '../types/entities';
 import { Subject } from '../models/Subject';
 import { Theme } from '../models/Theme';
 
@@ -15,6 +15,6 @@ export interface ScoreRepository {
         userId: User['id'],
         subjectId: Subject['id']
     ): Promise<Score[]>;
-    getUserGlobalScoresSortedByTheme(userId: User['id']): Promise<Score[]>;
-    getUserGlobalScoresSortedBySubject(userId: User['id']): Promise<Score[]>;
+    getUserGlobalScoresSortedByTheme(userId: User['id']): Promise<UserGlobalScoreSortedByTheme[]>;
+    getUserGlobalScoresSortedBySubject(userId: User['id']): Promise<UserGlobalScoreSortedBySubject[]>;
 }

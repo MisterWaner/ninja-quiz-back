@@ -18,6 +18,20 @@ export type UserGlobalScore = {
     totalScore: number;
 };
 
+export type UserGlobalScoreSortedBySubject = {
+    userId: User['id'];
+    username: User['username'];
+    totalScore: number;
+    subjectName: string;
+}
+
+export type UserGlobalScoreSortedByTheme = {
+    userId: User['id'];
+    username: User['username'];
+    totalScore: number;
+    themeName: string;
+}
+
 export type UserDailyScore = {
     userId: User['id'];
     username: User['username'];
