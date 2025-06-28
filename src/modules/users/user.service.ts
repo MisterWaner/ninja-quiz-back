@@ -53,7 +53,7 @@ export class UserService implements UserRepository {
     }
 
     async updateUserPassword(id: string, password: string): Promise<void> {
-        const user = this.getUserById(id);
+        const user = await this.getUserById(id);
         if (!user) throw new Error('User not found');
 
         const hashedPassword = await hashPassword(password);
@@ -65,7 +65,7 @@ export class UserService implements UserRepository {
     }
 
     async deleteUser(id: string): Promise<void> {
-        const user = this.getUserById(id);
+        const user = await this.getUserById(id);
         if (!user) throw new Error('User not found');
 
         await pool.query('DELETE FROM users WHERE id = $1', [id]);

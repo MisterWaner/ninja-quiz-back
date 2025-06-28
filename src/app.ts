@@ -11,6 +11,10 @@ fastifyApp.register(fastifyCors, {
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 });
+fastifyApp.addHook('onRequest', (request, reply, done) => {
+    console.log(`${request.method} ${request.url}`);
+    done();
+});
 fastifyApp.register(auth);
 
 // import routes

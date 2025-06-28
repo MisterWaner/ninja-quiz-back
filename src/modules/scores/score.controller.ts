@@ -6,7 +6,17 @@ import { Subject } from '../../models/Subject';
 import { Theme } from '../../models/Theme';
 
 export class ScoreController {
-    constructor(private scoreService: ScoreService) {}
+    constructor(private scoreService: ScoreService) {
+        this.addScore = this.addScore.bind(this);
+        this.getUserDailyScore = this.getUserDailyScore.bind(this);
+        this.getUserGlobalScore = this.getUserGlobalScore.bind(this);
+        this.getUsersDailyScore = this.getUsersDailyScore.bind(this);
+        this.getUsersGlobalScore = this.getUsersGlobalScore.bind(this);
+        this.getUserDailyScoresBySubject = this.getUserDailyScoresBySubject.bind(this);
+        this.getUserDailyScoresSortedByTheme = this.getUserDailyScoresSortedByTheme.bind(this);
+        this.getUserGlobalScoresSortedBySubject = this.getUserGlobalScoresSortedBySubject.bind(this);
+        this.getUserGlobalScoresSortedByTheme = this.getUserGlobalScoresSortedByTheme.bind(this);
+    }
 
     addScore = async (
         request: FastifyRequest,

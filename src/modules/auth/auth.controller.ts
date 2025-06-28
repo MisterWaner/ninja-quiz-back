@@ -7,7 +7,12 @@ export class AuthController {
     constructor(
         private authService: AuthService,
         private userService: UserService
-    ) {}
+    ) {
+        this.login = this.login.bind(this);
+        this.register = this.register.bind(this);
+        this.logout = this.logout.bind(this);
+        this.meHandler = this.meHandler.bind(this);
+    }
 
     register = async (request: FastifyRequest, reply: FastifyReply) => {
         try {

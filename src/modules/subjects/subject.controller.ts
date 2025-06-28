@@ -4,7 +4,14 @@ import { Subject } from '../../models/Subject';
 import { normalizedString } from '../../lib/helpers/general-helpers';
 
 export class SubjectController {
-    constructor(private subjectService: SubjectService) {}
+    constructor(private subjectService: SubjectService) {
+        this.createSubject = this.createSubject.bind(this);
+        this.deleteSubject = this.deleteSubject.bind(this);
+        this.updateSubject = this.updateSubject.bind(this);
+        this.getSubjectById  = this.getSubjectById.bind(this);
+        this.getSubjects = this.getSubjects.bind(this);
+        this.getSubjectsWithThemes = this.getSubjectsWithThemes.bind(this);
+    }
 
     createSubject = async(
         request: FastifyRequest,

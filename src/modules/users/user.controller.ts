@@ -3,7 +3,13 @@ import { UserService } from './user.service';
 import { User } from '../../models/User';
 
 export class UserController {
-    constructor(private userService: UserService) {}
+    constructor(private userService: UserService) {
+        this.updateUserPassword = this.updateUserPassword.bind(this);
+        this.getUsers = this.getUsers.bind(this);
+        this.getUserById = this.getUserById.bind(this);
+        this.updateUserUsername = this.updateUserUsername.bind(this);
+        this.deleteUser = this.deleteUser.bind(this);
+    }
 
     async getUsers(
         request: FastifyRequest,
@@ -72,7 +78,7 @@ export class UserController {
     ) {
         try {
             const { id } = request.params;
-
+            console.log("requete recue pour updatepassword")
             const user = await this.userService.getUserById(id);
 
             if (!user) {

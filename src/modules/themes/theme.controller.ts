@@ -4,7 +4,13 @@ import { Theme } from '../../models/Theme';
 import { normalizedString } from '../../lib/helpers/general-helpers';
 
 export class ThemeController {
-    constructor(private themeService: ThemeService) {}
+    constructor(private themeService: ThemeService) {
+        this.createTheme = this.createTheme.bind(this);
+        this.updateTheme = this.updateTheme.bind(this);
+        this.deleteTheme = this.deleteTheme.bind(this);
+        this.getThemeById  = this.getThemeById.bind(this);
+        this.getThemes = this.getThemes.bind(this);
+    }
 
     async createTheme(
         request: FastifyRequest,

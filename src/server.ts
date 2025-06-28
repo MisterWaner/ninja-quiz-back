@@ -1,7 +1,6 @@
 import fastifyApp from './app';
 import { config } from 'dotenv';
-import { runDatabase, isDatabaseEmpty } from './database/init';
-import { seedDatabase } from './database/seed';
+import { runDatabase } from './database/init';
 
 config();
 
