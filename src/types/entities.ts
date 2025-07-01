@@ -12,6 +12,11 @@ export type Country = {
     capital: string[];
 };
 
+export type HistoricalDateQuestion = {
+    question: string;
+    year: number;
+}
+
 export type UserGlobalScore = {
     userId: User['id'];
     username: User['username'];

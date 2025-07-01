@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { CapitalsQuestionService } from './capitals.question.service';
-import { ThemeService } from '../../../../modules/themes/theme.service';
+import { ThemeService } from '../../../themes/theme.service';
 import { Quiz } from '../../../../models/Quiz';
 import { MultipleChoiceQuestion } from '../../../../models/Question';
 import { generateNumberId } from '../../../../lib/id-generators';

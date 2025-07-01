@@ -29,6 +29,9 @@ const subjectsWithThemes: Record<string, string[]> = {
         'Drapeaux africains',
         'Drapeaux aléatoires',
     ],
+    Histoire: [
+        'Dates historiques'
+    ]
 };
 
 export async function seedDatabase() {

@@ -1,12 +1,10 @@
-import type { Country } from '../../../../types/entities';
-import { africanDatas } from '../../../../api/geography/africanApi';
+import type {Country} from '../../../../types/entities';
+import {africanDatas} from '../../../../api/geography/africanApi';
 
 export async function fetchAfricanCountries(): Promise<Country[]> {
-    const datas = africanDatas.map((country: Country) => ({
-        name: { common: country.name.common },
+    return africanDatas.map((country: Country) => ({
+        name: {common: country.name.common},
         capital: country.capital,
-        flags: { svg: country.flags.svg, png: country.flags.png },
+        flags: {svg: country.flags.svg, png: country.flags.png},
     }));
-
-    return datas;
 }

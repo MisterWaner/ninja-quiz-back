@@ -24,3 +24,7 @@ export interface GeoFlagsQuestionRepository {
     generateOceanianFlagsQuestion(): Promise<MultipleChoiceQuestion>;
     generateRandomFlagsQuestion(): Promise<MultipleChoiceQuestion>;
 }
+
+export interface HistoryQuestionRepository {
+    generateRandomHistoricalDatesQuestion(): Promise<MultipleChoiceQuestion>
+}
