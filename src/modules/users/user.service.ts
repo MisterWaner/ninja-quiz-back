@@ -12,8 +12,7 @@ export class UserService implements UserRepository {
 
         const user = result.rows[0];
 
-        if (!user) throw new Error('User not found');
-        return user;
+        return user ?? null
     }
 
     async getUserByUsername(username: string): Promise<User | null> {
@@ -24,9 +23,7 @@ export class UserService implements UserRepository {
 
         const user = result.rows[0];
 
-        if (!user) throw new Error('User not found');
-
-        return user;
+        return user ?? null
     }
 
     async getUsers(): Promise<User[]> {

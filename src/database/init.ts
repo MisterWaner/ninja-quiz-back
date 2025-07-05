@@ -34,7 +34,7 @@ async function initDatabase() {
             error
         );
     } finally {
-        adminPool.end();
+        await adminPool.end();
     }
 }
 

@@ -1,10 +1,18 @@
-import { SubjectService } from '../modules/subjects/subject.service';
-import { ThemeService } from '../modules/themes/theme.service';
-import { Subject } from '../models/Subject';
-import { Theme } from '../models/Theme';
+import {SubjectService} from '../modules/subjects/subject.service';
+import {ThemeService} from '../modules/themes/theme.service';
+import {AuthService} from "../modules/auth/auth.service";
+import {UserService} from "../modules/users/user.service";
+import {Subject} from '../models/Subject';
+import {Theme} from '../models/Theme';
+import {User} from '../models/User';
+import {config} from 'dotenv'
+
+config()
 
 const subjectService = new SubjectService();
 const themeService = new ThemeService();
+const userService = new UserService();
+const authService = new AuthService();
 
 const subjectsWithThemes: Record<string, string[]> = {
     Mathématiques: [
@@ -71,5 +79,20 @@ export async function seedDatabase() {
         }
     }
 
-    console.log('🌱 Base de données remplie avec succès.');
+    try {
+        const username: User["username"] = 'Test';
+        const password: User["password"] = process.env.TESTERPWD as string;
+        const userExist = await userService.getUserByUsername(username)
+
+        if (!userExist) {
+            await authService.registerUser(username, password);
+            console.log(`✅ User "${username}" created successfully.`)
+        } else {
+            console.log(`ℹ️ User "${username}" already exists.`)
+        }
+    } catch (error) {
+        console.error(`❌ Error during tester user creation: ${error}`)
+    }
+
+    console.log('🌱 Database successfully seeded.');
 }
