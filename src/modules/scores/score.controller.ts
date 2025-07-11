@@ -3,7 +3,6 @@ import { ScoreService } from './score.service';
 import { Score } from '../../models/Score';
 import { User } from '../../models/User';
 import { Subject } from '../../models/Subject';
-import { Theme } from '../../models/Theme';
 
 export class ScoreController {
     constructor(private scoreService: ScoreService) {
@@ -168,6 +167,36 @@ export class ScoreController {
             const scores = await this.scoreService.getUserGlobalScoresSortedBySubject(
                 userId,
             );
+            if (!scores) reply.status(404).send('No scores found');
+
+            reply.status(200).send(scores);
+        } catch (error) {
+            reply.status(500).send(error);
+        }
+    };
+
+    getUserAverageScoreByTheme = async (
+        request: FastifyRequest<{ Params: { userId: User['id'] } }>,
+        reply: FastifyReply
+    ): Promise<void> => {
+        try {
+            const { userId } = request.params;
+            const scores = await this.scoreService.getUserAverageScoreByTheme(userId);
+            if (!scores) reply.status(404).send('No scores found');
+
+            reply.status(200).send(scores);
+        } catch (error) {
+            reply.status(500).send(error);
+        }
+    };  
+
+    getUserAverageScoreBySubject = async (
+        request: FastifyRequest<{ Params: { userId: User['id'] } }>,
+        reply: FastifyReply
+    ): Promise<void> => {
+        try {
+            const { userId } = request.params;
+            const scores = await this.scoreService.getUserAverageScoreBySubject(userId);
             if (!scores) reply.status(404).send('No scores found');
 
             reply.status(200).send(scores);

@@ -37,6 +37,22 @@ export type UserGlobalScoreSortedByTheme = {
     themeName: string;
 }
 
+export type UserAverageScoreSortedByTheme = {
+    userId: User['id'];
+    username: User['username'];
+    averageScore: number;
+    totalScore: number;
+    themeName: string;
+}
+
+export type UserAverageScoreSortedBySubject = {
+    userId: User['id'];
+    username: User['username'];
+    averageScore: number;
+    totalScore: number;
+    subjectName: string;
+}
+
 export type UserDailyScore = {
     userId: User['id'];
     username: User['username'];

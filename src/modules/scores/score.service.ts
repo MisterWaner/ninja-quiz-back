@@ -10,6 +10,8 @@ import type {
     UserDailyScore,
     UserGlobalScoreSortedBySubject,
     UserGlobalScoreSortedByTheme,
+    UserAverageScoreSortedByTheme,
+    UserAverageScoreSortedBySubject,
 } from '../../types/entities';
 
 export class ScoreService implements ScoreRepository {
@@ -188,6 +190,66 @@ export class ScoreService implements ScoreRepository {
             totalScore: row.totalscore,
             subjectName: row.subjectname,
         })) as UserGlobalScoreSortedBySubject[];
+
+        if (!scores) throw new Error('No scores found');
+
+        return scores;
+    }
+
+    async getUserAverageScoreByTheme(
+        userId: User['id']
+    ): Promise<UserAverageScoreSortedByTheme[]> {
+        const results = await pool.query(
+            `
+            SELECT t.name as themeName,
+            SUM(s.value) as totalScore,
+            ROUND(AVG(s.value), 2) as averageScore
+            FROM scores s
+            JOIN themes t ON s.theme_id = t.id
+            WHERE s.user_id = $1
+            GROUP BY s.theme_id, themeName
+            ORDER BY t.name ASC
+            `,
+            [userId]
+        );
+
+        const scores = results.rows.map((row) => ({
+            userId: row.userid,
+            username: row.username,
+            averageScore: row.averagescore,
+            totalScore: row.totalscore,
+            themeName: row.themename,
+        })) as UserAverageScoreSortedByTheme[];
+
+        if (!scores) throw new Error('No scores found');
+
+        return scores;
+    }
+
+    async getUserAverageScoreBySubject(
+        userId: User['id']
+    ): Promise<UserAverageScoreSortedBySubject[]> {
+        const results = await pool.query(
+            `
+            SELECT subj.name as subjectName,
+            SUM(s.value) as totalScore,
+            ROUND(AVG(s.value), 2) as averageScore
+            FROM scores s
+            JOIN subjects subj ON s.subject_id = subj.id
+            WHERE s.user_id = $1
+            GROUP BY s.subject_id, subjectName
+            ORDER BY subj.name ASC
+            `,
+            [userId]
+        );
+
+        const scores = results.rows.map((row) => ({
+            userId: row.userid,
+            username: row.username,
+            averageScore: row.averagescore,
+            totalScore: row.totalscore,
+            subjectName: row.subjectname,
+        })) as UserAverageScoreSortedBySubject[];
 
         if (!scores) throw new Error('No scores found');
 

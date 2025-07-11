@@ -13,16 +13,14 @@ export async function usersRouter(fastify: FastifyInstance) {
         {},
         userController.getUserById
     );
-    fastify.put<{ Params: { id: string }; Body: { username: User['username'] } }>(
-        '/:id',
-        {},
-        userController.updateUserUsername
-    );
-    fastify.put<{ Params: { id: string }; Body: { password: User['password'] } }>(
-        '/:id/pwd',
-        {},
-        userController.updateUserPassword
-    );
+    fastify.put<{
+        Params: { id: string };
+        Body: { username: User['username'] };
+    }>('/:id', {}, userController.updateUserUsername);
+    fastify.put<{
+        Params: { id: string };
+        Body: { password: User['password'] };
+    }>('/:id/pwd', {}, userController.updateUserPassword);
     fastify.delete<{ Params: { id: string } }>(
         '/:id',
         {},

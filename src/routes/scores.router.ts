@@ -5,7 +5,12 @@ import { Score } from '../models/Score';
 import { User } from '../models/User';
 import { Theme } from '../models/Theme';
 import { Subject } from '../models/Subject';
-import type { UserGlobalScore, UserDailyScore } from '../types/entities';
+import type {
+    UserGlobalScore,
+    UserDailyScore,
+    UserAverageScoreSortedByTheme,
+    UserAverageScoreSortedBySubject,
+} from '../types/entities';
 
 const scoreService = new ScoreService();
 const scoreController = new ScoreController(scoreService);
@@ -63,6 +68,16 @@ export async function scoresRouter(fastify: FastifyInstance) {
         '/:userId/global/by-subject',
         scoreController.getUserGlobalScoresSortedBySubject
     );
+
+    fastify.get<{
+        Params: { userId: User['id'] };
+        Reply: UserAverageScoreSortedByTheme[];
+    }>('/:userId/average/by-theme', scoreController.getUserAverageScoreByTheme);
+
+    fastify.get<{
+        Params: { userId: User['id'] };
+        Reply: UserAverageScoreSortedBySubject[];
+    }>('/:userId/average/by-subject', scoreController.getUserAverageScoreBySubject);
 
     fastify.post('/', scoreController.addScore);
 }

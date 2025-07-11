@@ -1,6 +1,7 @@
 import fastifyApp from './app';
 import { config } from 'dotenv';
 import { runDatabase } from './database/init';
+import './lib/tasks/resetScores';
 
 config();
 
