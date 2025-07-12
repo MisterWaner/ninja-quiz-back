@@ -10,7 +10,7 @@ const fastifyApp = fastify({
 });
 
 fastifyApp.register(fastifyCors, {
-    origin: process.env.FRONTEND,
+    origin: "*",
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: [
         'Content-Type',
