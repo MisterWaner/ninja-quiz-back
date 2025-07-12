@@ -10,7 +10,7 @@ const fastifyApp = fastify({
 });
 
 fastifyApp.register(fastifyCors, {
-    origin: "*",
+    origin: 'https://ninja-quizz.netlify.app/*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: [
         'Content-Type',
