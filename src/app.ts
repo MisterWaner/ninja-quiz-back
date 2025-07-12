@@ -12,6 +12,11 @@ const fastifyApp = fastify({
 fastifyApp.register(fastifyCors, {
     origin: process.env.FRONTEND,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: [
+        'Content-Type',
+        'Authorization',
+        'Access-Control-Allow-Origin',
+    ],
     credentials: true,
 });
 fastifyApp.addHook('onRequest', (request, reply, done) => {
@@ -25,7 +30,7 @@ import { routes } from './routes';
 
 fastifyApp.get('/', (req, res) => {
     res.send('API démarrée et opérationnelle');
-})
+});
 
 fastifyApp.register(routes);
 
