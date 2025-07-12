@@ -9,7 +9,7 @@ const PORT = Number(process.env.PORT) || 8080;
 
 async function startServer() {
     try {
-        await fastifyApp.listen({ port: PORT });
+        await fastifyApp.listen({ port: PORT, host: '::' });
         console.log(`Server is running on port ${PORT}`);
 
         await runDatabase();
