@@ -5,7 +5,7 @@ import './lib/tasks/resetScores';
 
 config();
 
-const PORT = Number(process.env.PORT) || 3001;
+const PORT = Number(process.env.PORT) || 8080;
 
 async function startServer() {
     try {
