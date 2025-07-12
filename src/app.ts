@@ -1,13 +1,16 @@
+import { config } from 'dotenv';
 import fastify from 'fastify';
 import fastifyCors from '@fastify/cors';
 import auth from './lib/plugins/auth';
+
+config();
 
 const fastifyApp = fastify({
     logger: true,
 });
 
 fastifyApp.register(fastifyCors, {
-    origin: 'http://localhost:5173',
+    origin: process.env.FRONTEND,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 });
