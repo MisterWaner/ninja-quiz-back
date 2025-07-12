@@ -13,6 +13,7 @@ export type Country = {
 };
 
 export type HistoricalDateQuestion = {
+    id?: number;
     question: string;
     year: number;
 }
