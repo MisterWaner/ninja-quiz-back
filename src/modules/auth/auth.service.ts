@@ -6,7 +6,7 @@ import { generateStringId } from '../../lib/id-generators';
 
 export class AuthService implements AuthRepository {
     async registerUser(username: string, password: string): Promise<void> {
-        const id = generateStringId();
+        const id = await generateStringId();
         const hashedPassword = await hashPassword(password);
 
         await pool.query(
