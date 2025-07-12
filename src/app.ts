@@ -11,14 +11,16 @@ const fastifyApp = fastify({
 
 fastifyApp.register(fastifyCors, {
     origin: 'https://ninja-quizz.netlify.app',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
         'Content-Type',
         'Authorization',
         'Access-Control-Allow-Origin',
     ],
     credentials: true,
+    preflight: true,
 });
+
 fastifyApp.addHook('onRequest', (request, reply, done) => {
     console.log(`${request.method} ${request.url}`);
     done();
