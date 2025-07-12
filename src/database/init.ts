@@ -8,10 +8,10 @@ config();
 
 const adminPool = new Pool({
     user: process.env.POSTGRES_USER,
-    host: 'localhost',
+    host: process.env.PGHOST,
     database: 'postgres',
-    password: process.env.POSTGRES_PASS,
-    port: Number(process.env.POSTGRES_PORT),
+    password: process.env.POSTGRES_PASSWORD,
+    port: Number(process.env.PGPORT),
 });
 
 async function initDatabase() {

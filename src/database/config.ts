@@ -5,10 +5,10 @@ config();
 
 const pool = new Pool({
     user: process.env.POSTGRES_USER,
-    host: 'localhost',
+    host: process.env.PGHOST,
     database: process.env.POSTGRES_DB,
-    password: process.env.POSTGRES_PASS,
-    port: Number(process.env.POSTGRES_PORT),
+    password: process.env.POSTGRES_PASSWORD,
+    port: Number(process.env.PGPORT),
 });
 
 export default pool;
