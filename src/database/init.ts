@@ -7,11 +7,10 @@ import { seedDatabase } from './seed';
 config();
 
 const adminPool = new Pool({
-    user: process.env.POSTGRES_USER,
-    host: process.env.PGHOST,
-    database: 'postgres',
-    password: process.env.POSTGRES_PASSWORD,
-    port: Number(process.env.PGPORT),
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false,
+    },
 });
 
 async function initDatabase() {
