@@ -4,11 +4,10 @@ import { config } from 'dotenv';
 config();
 
 const pool = new Pool({
-    user: process.env.POSTGRES_USER,
-    host: process.env.PGHOST,
-    database: process.env.POSTGRES_DB,
-    password: process.env.POSTGRES_PASSWORD,
-    port: Number(process.env.PGPORT),
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false,
+    },
 });
 
 export default pool;
