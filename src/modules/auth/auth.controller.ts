@@ -78,11 +78,11 @@ export class AuthController {
                 .setCookie('token', token, {
                     path: '/',
                     httpOnly: true,
-                    sameSite: 'strict',
+                    sameSite: 'none',
                     secure: true,
                 })
                 .status(200)
-                .send({ message: 'Authentifié avec succès', token });
+                .send({ message: 'Authentifié avec succès' });
         } catch (error) {
             reply.status(500).send({ message: 'Erreur interne' });
         }
