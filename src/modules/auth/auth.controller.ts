@@ -82,7 +82,7 @@ export class AuthController {
                     secure: true,
                 })
                 .status(200)
-                .send({ message: 'Authentifié avec succès' });
+                .send({ message: 'Authentifié avec succès', token });
         } catch (error) {
             reply.status(500).send({ message: 'Erreur interne' });
         }
