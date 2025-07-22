@@ -1,4 +1,4 @@
-import { User } from '../models/User';
+import { UserResponse } from '../domain/user/user.schema';
 import { Score } from '../models/Score';
 
 export type Country = {
@@ -19,44 +19,44 @@ export type HistoricalDateQuestion = {
 }
 
 export type UserGlobalScore = {
-    userId: User['id'];
-    username: User['username'];
+    userId: UserResponse['id'];
+    username: UserResponse['username'];
     totalScore: number;
 };
 
 export type UserGlobalScoreSortedBySubject = {
-    userId: User['id'];
-    username: User['username'];
+    userId: UserResponse['id'];
+    username: UserResponse['username'];
     totalScore: number;
     subjectName: string;
 }
 
 export type UserGlobalScoreSortedByTheme = {
-    userId: User['id'];
-    username: User['username'];
+    userId: UserResponse['id'];
+    username: UserResponse['username'];
     totalScore: number;
     themeName: string;
 }
 
 export type UserAverageScoreSortedByTheme = {
-    userId: User['id'];
-    username: User['username'];
+    userId: UserResponse['id'];
+    username: UserResponse['username'];
     averageScore: number;
     totalScore: number;
     themeName: string;
 }
 
 export type UserAverageScoreSortedBySubject = {
-    userId: User['id'];
-    username: User['username'];
+    userId: UserResponse['id'];
+    username: UserResponse['username'];
     averageScore: number;
     totalScore: number;
     subjectName: string;
 }
 
 export type UserDailyScore = {
-    userId: User['id'];
-    username: User['username'];
+    userId: UserResponse['id'];
+    username: UserResponse['username'];
     totalScore: number;
     date: Score['date'];
 };

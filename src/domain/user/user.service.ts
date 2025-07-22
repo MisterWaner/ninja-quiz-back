@@ -1,38 +1,52 @@
-import { User } from '../../models/User';
 import { UserRepository } from '../../application/user.repository';
 import pool from '../../database/config';
+import {
+    CreateUserInput,
+    UserResponse,
+} from './user.schema';
 import { hashPassword } from '../../lib/helpers/auth-helpers';
+import { generateStringId } from '../../lib/id-generators';
 
 export class UserService implements UserRepository {
-    async getUserById(id: string): Promise<User | null> {
-        const result = await pool.query<User>(
-            'SELECT * FROM users WHERE id = $1',
-            [id]
+    async createUser({ username, password }: CreateUserInput): Promise<void> {
+        const id = await generateStringId();
+        const hashedPassword = await hashPassword(password);
+        await pool.query(
+            'INSERT INTO users (id, username, password) VALUES ($1, $2, $3)',
+            [id, username, hashedPassword]
         );
-
-        const user = result.rows[0];
-
-        return user ?? null
     }
 
-    async getUserByUsername(username: string): Promise<User | null> {
-        const result = await pool.query<User>(
+    async getUserById(id: string): Promise<UserResponse | null> {
+        const result = await pool.query('SELECT * FROM users WHERE id = $1', [
+            id,
+        ]);
+        const user = result.rows[0] as UserResponse;
+
+        if (!user) throw new Error('User not found');
+
+        return user ?? null;
+    }
+
+    async getUserByUsername(username: string): Promise<UserResponse | null> {
+        const result = await pool.query(
             'SELECT * FROM users WHERE username = $1',
             [username]
         );
 
-        const user = result.rows[0];
+        const user = result.rows[0] as UserResponse;
 
-        return user ?? null
+        if (!user) throw new Error('User not found');
+
+        return user ?? null;
     }
 
-    async getUsers(): Promise<User[]> {
+    async getUsers(): Promise<UserResponse[]> {
         const result = await pool.query('SELECT * FROM users');
         const users = result.rows.map((row) => ({
             id: row.id,
             username: row.username,
-            password: row.password,
-        })) as User[];
+        })) as UserResponse[];
 
         if (!users) throw new Error('No users found');
 
@@ -55,10 +69,10 @@ export class UserService implements UserRepository {
 
         const hashedPassword = await hashPassword(password);
 
-        await pool.query(
-            'UPDATE users SET password = $1 WHERE id = $2',
-            [hashedPassword, id]
-        );
+        await pool.query('UPDATE users SET password = $1 WHERE id = $2', [
+            hashedPassword,
+            id,
+        ]);
     }
 
     async deleteUser(id: string): Promise<void> {

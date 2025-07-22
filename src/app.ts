@@ -1,7 +1,9 @@
 import { config } from 'dotenv';
-import fastify from 'fastify';
+import fastify, { FastifyRequest, FastifyReply } from 'fastify';
 import fastifyCors from '@fastify/cors';
-import auth from './lib/plugins/auth';
+import fastifyCookie from '@fastify/cookie';
+import fastifyJwt, { FastifyJWT } from '@fastify/jwt';
+import { UserPayload } from './types/global';
 
 config();
 
@@ -9,8 +11,39 @@ const fastifyApp = fastify({
     logger: true,
 });
 
+fastifyApp.register(fastifyJwt, {
+    secret: process.env.JWT_SECRET!,
+});
+
+fastifyApp.decorate(
+    'authenticate',
+    async (request: FastifyRequest, reply: FastifyReply) => {
+        const token = request.cookies.access_token;
+
+        if (!token) {
+            return reply.status(401).send({ message: 'Non authentifié' });
+        }
+
+        const decoded = request.jwt.verify(token) as UserPayload;
+        request.user = decoded;
+    }
+);
+
+fastifyApp.addHook(
+    'preHandler',
+    (request: FastifyRequest, reply: FastifyReply, done) => {
+        request.jwt = fastifyApp.jwt;
+        return done();
+    }
+);
+
+fastifyApp.register(fastifyCookie, {
+    secret: process.env.COOKIE_SECRET!,
+    hook: 'preHandler',
+});
+
 fastifyApp.register(fastifyCors, {
-    origin: 'https://ninja-quizz.netlify.app',
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
         'Content-Type',
@@ -25,10 +58,10 @@ fastifyApp.addHook('onRequest', (request, reply, done) => {
     console.log(`${request.method} ${request.url}`);
     done();
 });
-fastifyApp.register(auth);
 
 // import routes
 import { routes } from './routes';
+
 
 fastifyApp.get('/', (req, res) => {
     res.send('API démarrée et opérationnelle');
