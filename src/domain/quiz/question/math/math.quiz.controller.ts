@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { MathQuestionService } from './math.question.service';
-import { ThemeService } from '../../../modules/themes/theme.service';
-import { Quiz } from '../../../models/Quiz';
-import { DirectQuestion } from '../../../models/Question';
-import { generateNumberId } from '../../../lib/id-generators';
+import { ThemeService } from '../../theme/theme.service';
+import { Quiz } from '../../quiz.schema';
+import { DirectQuestion } from '../../question/question.schema';
+import { generateNumberId } from '../../../../lib/id-generators';
 
 const themeService = new ThemeService();
 
@@ -20,9 +20,15 @@ export class MathQuizController {
         const questions: DirectQuestion[] = Array.from({ length }, () =>
             this.mathQuestionService.generateAddition()
         );
-        
 
-        const quiz = new Quiz(id, questionType, questions, theme, themeId, this.subjectId);
+        const quiz: Quiz = {
+            id,
+            questionType,
+            questions,
+            theme,
+            themeId,
+            subjectId: this.subjectId,
+        };
 
         reply.status(200).send(quiz);
     };
@@ -37,12 +43,22 @@ export class MathQuizController {
             this.mathQuestionService.generateSubstraction()
         );
 
-        const quiz = new Quiz(id, questionType, questions, theme, themeId, this.subjectId);
+        const quiz = {
+            id,
+            questionType,
+            questions,
+            theme,
+            themeId,
+            subjectId: this.subjectId,
+        };
 
         reply.status(200).send(quiz);
     };
 
-    getMultiplication = async (request: FastifyRequest, reply: FastifyReply) => {
+    getMultiplication = async (
+        request: FastifyRequest,
+        reply: FastifyReply
+    ) => {
         const id = generateNumberId();
         const length = 10;
         const questionType = 'direct';
@@ -52,12 +68,22 @@ export class MathQuizController {
             this.mathQuestionService.generateMultiplication()
         );
 
-        const quiz = new Quiz(id, questionType, questions, theme, themeId, this.subjectId);
+        const quiz = {
+            id,
+            questionType,
+            questions,
+            theme,
+            themeId,
+            subjectId: this.subjectId,
+        };
 
         reply.status(200).send(quiz);
     };
 
-    getIntergerComparison = async (request: FastifyRequest, reply: FastifyReply) => {
+    getIntegerComparison = async (
+        request: FastifyRequest,
+        reply: FastifyReply
+    ) => {
         const id = generateNumberId();
         const length = 10;
         const questionType = 'direct';
@@ -67,12 +93,22 @@ export class MathQuizController {
             this.mathQuestionService.generateIntegerComparison()
         );
 
-        const quiz = new Quiz(id, questionType, questions, theme, themeId, this.subjectId);
+        const quiz = {
+            id,
+            questionType,
+            questions,
+            theme,
+            themeId,
+            subjectId: this.subjectId
+        };
 
         reply.status(200).send(quiz);
     };
 
-    getDecimalComparison = async (request: FastifyRequest, reply: FastifyReply) => {
+    getDecimalComparison = async (
+        request: FastifyRequest,
+        reply: FastifyReply
+    ) => {
         const id = generateNumberId();
         const length = 10;
         const questionType = 'direct';
@@ -82,12 +118,22 @@ export class MathQuizController {
             this.mathQuestionService.generateDecimalComparison()
         );
 
-        const quiz = new Quiz(id, questionType, questions, theme, themeId, this.subjectId);
+        const quiz = {
+            id,
+            questionType,
+            questions,
+            theme,
+            themeId,
+            subjectId: this.subjectId
+        };
 
         reply.status(200).send(quiz);
     };
 
-    getRandomOperation = async (request: FastifyRequest, reply: FastifyReply) => {
+    getRandomOperation = async (
+        request: FastifyRequest,
+        reply: FastifyReply
+    ) => {
         const id = generateNumberId();
         const length = 10;
         const questionType = 'direct';
@@ -97,7 +143,14 @@ export class MathQuizController {
             this.mathQuestionService.generateRandomOperation()
         );
 
-        const quiz = new Quiz(id, questionType, questions, theme, themeId, this.subjectId);
+        const quiz = {
+            id,
+            questionType,
+            questions,
+            theme,
+            themeId,
+            subjectId: this.subjectId
+        };
 
         reply.status(200).send(quiz);
     };

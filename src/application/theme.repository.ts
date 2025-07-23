@@ -1,14 +1,19 @@
-import { Theme } from '../models/Theme';
+import {
+    ThemeResponse,
+    CreateThemeInput,
+} from '../domain/quiz/theme/theme.schema';
 
 export interface ThemeRepository {
-    createTheme(theme: Theme): Promise<void>;
-    getThemes(): Promise<Theme[]>;
-    getThemeById(id: string): Promise<Theme>;
-    getThemeByNameAndReturnId(name: Theme['name']): Promise<Theme['id']>;
+    createTheme(theme: CreateThemeInput): Promise<void>;
+    getThemes(): Promise<ThemeResponse[]>;
+    getThemeById(id: ThemeResponse['id']): Promise<ThemeResponse>;
+    getThemeByNameAndReturnId(
+        name: ThemeResponse['name']
+    ): Promise<ThemeResponse['id']>;
     updateTheme(
-        id: string,
-        name: Theme['name'],
-        themePath: Theme['themePath']
+        id: ThemeResponse['id'],
+        name: ThemeResponse['name'],
+        path: ThemeResponse['path']
     ): Promise<void>;
-    deleteTheme(id: string): Promise<void>;
+    deleteTheme(id: ThemeResponse['id']): Promise<void>;
 }

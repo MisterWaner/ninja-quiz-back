@@ -1,6 +1,6 @@
-import { MathQuestionRepository } from '../../../application/question.repository';
-import { DirectQuestion } from '../../../models/Question';
-import { generateNumberId } from '../../../lib/id-generators';
+import { MathQuestionRepository } from '../../../../application/question.repository';
+import { DirectQuestion } from '../../../../domain/quiz/question/question.schema';
+import { generateNumberId } from '../../../../lib/id-generators';
 
 export class MathQuestionService implements MathQuestionRepository {
     generateAddition(): DirectQuestion {
@@ -10,9 +10,8 @@ export class MathQuestionService implements MathQuestionRepository {
         const questionText = `Quel est le résultat de ${number1} + ${number2} ?`;
         const correctAnswer = (number1 + number2).toString();
 
-        return new DirectQuestion(id, questionText, correctAnswer);
+        return { id, questionText, correctAnswer };
     }
-
     generateSubstraction(): DirectQuestion {
         const id = generateNumberId();
         const number1 = Math.floor(Math.random() * 100);
@@ -31,9 +30,8 @@ export class MathQuestionService implements MathQuestionRepository {
             correctAnswer = '0';
         }
 
-        return new DirectQuestion(id, questionText, correctAnswer);
+        return { id, questionText, correctAnswer };
     }
-
     generateMultiplication(): DirectQuestion {
         const id = generateNumberId();
         const number1 = Math.floor(Math.random() * 10);
@@ -41,7 +39,7 @@ export class MathQuestionService implements MathQuestionRepository {
         const questionText = `Quel est le résultat de ${number1} x ${number2} ?`;
         const correctAnswer = (number1 * number2).toString();
 
-        return new DirectQuestion(id, questionText, correctAnswer);
+        return { id, questionText, correctAnswer };
     }
 
     generateIntegerComparison(): DirectQuestion {
@@ -59,7 +57,7 @@ export class MathQuestionService implements MathQuestionRepository {
             correctAnswer = '=';
         }
 
-        return new DirectQuestion(id, questionText, correctAnswer);
+        return { id, questionText, correctAnswer };
     }
 
     generateDecimalComparison(): DirectQuestion {
@@ -77,7 +75,7 @@ export class MathQuestionService implements MathQuestionRepository {
             correctAnswer = '=';
         }
 
-        return new DirectQuestion(id, questionText, correctAnswer);
+        return { id, questionText, correctAnswer };
     }
 
     generateRandomOperation(): DirectQuestion {

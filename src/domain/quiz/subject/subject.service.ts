@@ -1,83 +1,83 @@
-import { Subject } from '../../models/Subject';
-import { Theme } from '../../models/Theme';
-import { SubjectRepository } from '../../application/subject.repository';
-import pool from '../../database/config';
-import { normalizedString } from '../../lib/helpers/general-helpers';
+import { SubjectRepository } from '../../../application/subject.repository';
+import { SubjectResponse, CreateSubjectInput } from './subject.schema';
+import { ThemeResponse } from '../theme/theme.schema';
+import pool from '../../../database/config';
+import { normalizedString } from '../../../lib/helpers/general-helpers';
 
 export class SubjectService implements SubjectRepository {
-    async createSubject(subject: Subject): Promise<void> {
+    async createSubject(subject: CreateSubjectInput): Promise<void> {
         const { name } = subject;
-        const subjectPath = normalizedString(name);
-        await pool.query(`INSERT INTO subjects (name, subjectPath) VALUES ($1, $2)`, [
-            name,
-            subjectPath,
-        ]);
+        const path = normalizedString(name);
+        await pool.query(
+            `INSERT INTO subjects (name, subjectPath) VALUES ($1, $2)`,
+            [name, path]
+        );
     }
 
-    async getSubjects(): Promise<Subject[]> {
-        const results = await pool.query('SELECT * FROM subjects');
+    async getSubjects(): Promise<SubjectResponse[]> {
+        const results = await pool.query(`SELECT * FROM subjects`);
         const subjects = results.rows.map((row) => ({
             id: row.id,
             name: row.name,
-            subjectPath: row.subjectPath,
+            path: row.subjectPath,
             themes: [],
-        })) as Subject[];
+        })) as SubjectResponse[];
 
         if (!subjects) throw new Error('No subjects found');
 
         return subjects;
     }
 
-    async getSubjectById(id: number): Promise<Subject> {
-        const result = await pool.query<Subject>(
-            `
-            SELECT * FROM subjects WHERE id = $1`,
+    async getSubjectById(id: SubjectResponse['id']): Promise<SubjectResponse> {
+        const result = await pool.query(
+            `SELECT * FROM subjects WHERE id = $1`,
             [id]
         );
+        const subject = result.rows[0] as SubjectResponse;
 
-        const subject = result.rows[0];
         if (!subject) throw new Error('No subject found');
 
         return subject;
     }
 
     async updateSubject(
-        id: number,
-        name: Subject['name'],
-        subjectPath: Subject['subjectPath']
+        id: SubjectResponse['id'],
+        name: SubjectResponse['name'],
+        path: SubjectResponse['path']
     ): Promise<void> {
         const subject = await this.getSubjectById(id);
 
         if (!subject) throw new Error('No subject found');
 
         await pool.query(
-            'UPDATE subjects SET name = $1, subjectPath = $2 WHERE id = $3',
-            [name, subjectPath, id]
+            `UPDATE subjects SET name = $1, subjectPath = $2 WHERE id = $3`,
+            [name, path, id]
         );
     }
+    async deleteSubject(id: SubjectResponse['id']): Promise<void> {
+        const subject = await this.getSubjectById(id);
 
-    async deleteSubject(id: number): Promise<void> {
+        if (!subject) throw new Error('No subject found');
+
+        await pool.query(`DELETE FROM subjects WHERE id = $1`, [id]);
+    }
+
+    async getSubjectPath(
+        id: SubjectResponse['id']
+    ): Promise<SubjectResponse['path']> {
         const subject = await this.getSubjectById(id);
         if (!subject) throw new Error('No subject found');
 
-        await pool.query('DELETE FROM subjects WHERE id = $1', [id]);
+        return subject.path;
     }
 
-    async getSubjectPath(id: number): Promise<string> {
-        const subject = await this.getSubjectById(id);
-        if (!subject) throw new Error('No subject found');
-
-        return subject.subjectPath;
-    }
-
-    async getSubjectsWithThemes(): Promise<Subject[]> {
+    async getSubjectsWithThemes(): Promise<SubjectResponse[]> {
         const results = await pool.query<{
-            subject_id: number;
-            subject_name: string;
-            subject_path: string;
-            themes: Theme[];
-        }>(
-            `
+            subject_id: SubjectResponse['id'];
+            subject_name: SubjectResponse['name'];
+            subject_path: SubjectResponse['path'];
+            themes: ThemeResponse[];
+        }>(`
                 SELECT 
                     s.id AS subject_id,
                     s.name AS subject_name,
@@ -95,19 +95,16 @@ export class SubjectService implements SubjectRepository {
                 LEFT JOIN themes t ON s.id = t.subject_id
                 GROUP BY s.id, s.name, s.subjectPath
                 ORDER BY s.id
-            `
-        );
+            `);
 
         const subjectsWithThemes = results.rows.map((row) => ({
             id: row.subject_id,
             name: row.subject_name,
-            subjectPath: row.subject_path,
+            path: row.subject_path,
             themes: row.themes,
-        }))
+        }));
 
-        if (!subjectsWithThemes) {
-            throw new Error('Subjects not found');
-        }
+        if (!subjectsWithThemes) throw new Error('No subjects found');
 
         return subjectsWithThemes;
     }

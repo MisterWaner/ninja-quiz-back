@@ -1,13 +1,16 @@
-import { Subject } from '../models/Subject';
+import {
+    CreateSubjectInput,
+    SubjectResponse,
+} from '../domain/quiz/subject/subject.schema';
 
 export interface SubjectRepository {
-    createSubject(subject: Subject): Promise<void>;
-    getSubjects(): Promise<Subject[]>;
-    getSubjectById(id: number): Promise<Subject>;
+    createSubject(subject: CreateSubjectInput): Promise<void>;
+    getSubjects(): Promise<SubjectResponse[]>;
+    getSubjectById(id: SubjectResponse['id']): Promise<SubjectResponse>;
     updateSubject(
-        id: number,
-        name: Subject['name'],
-        subjectPath: Subject['subjectPath']
+        id: SubjectResponse['id'],
+        name: SubjectResponse['name'],
+        subjectPath: SubjectResponse['path']
     ): Promise<void>;
-    deleteSubject(id: number): Promise<void>;
+    deleteSubject(id: SubjectResponse['id']): Promise<void>;
 }

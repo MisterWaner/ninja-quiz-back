@@ -1,23 +1,23 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { ThemeService } from './theme.service';
-import { Theme } from '../../models/Theme';
-import { normalizedString } from '../../lib/helpers/general-helpers';
+import { CreateThemeInput, ThemeResponse } from './theme.schema';
+import { normalizedString } from '../../../lib/helpers/general-helpers';
 
 export class ThemeController {
     constructor(private themeService: ThemeService) {
         this.createTheme = this.createTheme.bind(this);
         this.updateTheme = this.updateTheme.bind(this);
         this.deleteTheme = this.deleteTheme.bind(this);
-        this.getThemeById  = this.getThemeById.bind(this);
+        this.getThemeById = this.getThemeById.bind(this);
         this.getThemes = this.getThemes.bind(this);
     }
 
     async createTheme(
-        request: FastifyRequest,
+        request: FastifyRequest<{ Body: CreateThemeInput }>,
         reply: FastifyReply
     ): Promise<void> {
         try {
-            const theme = request.body as Theme;
+            const theme = request.body;
 
             if (!theme.name) {
                 throw reply.status(400).send('Missing theme name');
@@ -61,10 +61,8 @@ export class ThemeController {
             const { id } = request.params;
             const theme = await this.themeService.getThemeById(id);
 
-            if (!theme) {
-                reply.status(404).send('No theme found');
-                return;
-            }
+            if (!theme) reply.status(404).send('Theme not found');
+
             reply.status(200).send(theme);
         } catch (error) {
             reply.status(500).send(error);
@@ -72,21 +70,24 @@ export class ThemeController {
     }
 
     async updateTheme(
-        request: FastifyRequest<{ Params: { id: string } }>,
+        request: FastifyRequest<{
+            Params: { id: ThemeResponse['id'] };
+            Body: { name: string };
+        }>,
         reply: FastifyReply
     ): Promise<void> {
         try {
             const { id } = request.params;
-            const { name } = request.body as Theme;
-            const themePath = normalizedString(name);
-            const theme = await this.themeService.getThemeById(id);
+            const { name } = request.body;
+            const path = normalizedString(name);
 
+            const theme = await this.themeService.getThemeById(id);
             if (!theme) {
-                reply.status(404).send('No theme found');
+                reply.status(404).send('Theme not found');
                 return;
             }
 
-            await this.themeService.updateTheme(id, name, themePath);
+            await this.themeService.updateTheme(id, name, path);
             reply.status(200).send('Theme updated');
         } catch (error) {
             reply.status(500).send(error);
@@ -101,12 +102,12 @@ export class ThemeController {
             const { id } = request.params;
             const theme = await this.themeService.getThemeById(id);
             if (!theme) {
-                reply.status(404).send('No theme found');
+                reply.status(404).send('Theme not found');
                 return;
             }
 
             await this.themeService.deleteTheme(id);
-            reply.status(200).send('Theme deleted');
+            reply.status(204).send('Theme deleted');
         } catch (error) {
             reply.status(500).send(error);
         }

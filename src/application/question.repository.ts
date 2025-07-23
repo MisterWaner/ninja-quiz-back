@@ -1,10 +1,12 @@
-import { DirectQuestion, MultipleChoiceQuestion } from '../models/Question';
+import { DirectQuestion, MultipleChoiceQuestion } from "../domain/quiz/question/question.schema";
 
 export interface MathQuestionRepository {
     generateAddition(): DirectQuestion;
     generateSubstraction(): DirectQuestion;
     generateMultiplication(): DirectQuestion;
     generateRandomOperation(): DirectQuestion;
+    generateIntegerComparison(): DirectQuestion;
+    generateDecimalComparison(): DirectQuestion;
 }
 
 export interface GeoCapitalsQuestionRepository {
