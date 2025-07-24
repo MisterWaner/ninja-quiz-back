@@ -1,8 +1,8 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
 import { ScoreService } from './score.service';
-import { Score } from '../../models/Score';
-import { User } from '../../models/User';
-import { Subject } from '../../models/Subject';
+import { CreateScoreInput, ScoreResponse } from './score.schema';
+import { UserResponse } from '../user/user.schema';
+import { SubjectResponse } from '../quiz/subject/subject.schema';
 
 export class ScoreController {
     constructor(private scoreService: ScoreService) {
@@ -11,10 +11,14 @@ export class ScoreController {
         this.getUserGlobalScore = this.getUserGlobalScore.bind(this);
         this.getUsersDailyScore = this.getUsersDailyScore.bind(this);
         this.getUsersGlobalScore = this.getUsersGlobalScore.bind(this);
-        this.getUserDailyScoresBySubject = this.getUserDailyScoresBySubject.bind(this);
-        this.getUserDailyScoresSortedByTheme = this.getUserDailyScoresSortedByTheme.bind(this);
-        this.getUserGlobalScoresSortedBySubject = this.getUserGlobalScoresSortedBySubject.bind(this);
-        this.getUserGlobalScoresSortedByTheme = this.getUserGlobalScoresSortedByTheme.bind(this);
+        this.getUserDailyScoresBySubject =
+            this.getUserDailyScoresBySubject.bind(this);
+        this.getUserDailyScoresSortedByTheme =
+            this.getUserDailyScoresSortedByTheme.bind(this);
+        this.getUserGlobalScoresSortedBySubject =
+            this.getUserGlobalScoresSortedBySubject.bind(this);
+        this.getUserGlobalScoresSortedByTheme =
+            this.getUserGlobalScoresSortedByTheme.bind(this);
     }
 
     addScore = async (
@@ -22,7 +26,8 @@ export class ScoreController {
         reply: FastifyReply
     ): Promise<void> => {
         try {
-            const { userId, themeId, subjectId, value } = request.body as Score;
+            const { userId, themeId, subjectId, value } =
+                request.body as CreateScoreInput;
             const date = new Date();
 
             await this.scoreService.addUserScore({
@@ -67,7 +72,7 @@ export class ScoreController {
     };
 
     getUserGlobalScore = async (
-        request: FastifyRequest<{ Params: { userId: User['id'] } }>,
+        request: FastifyRequest<{ Params: { userId: UserResponse['id'] } }>,
         reply: FastifyReply
     ): Promise<void> => {
         try {
@@ -82,7 +87,7 @@ export class ScoreController {
     };
 
     getUserDailyScore = async (
-        request: FastifyRequest<{ Params: { userId: User['id'] } }>,
+        request: FastifyRequest<{ Params: { userId: UserResponse['id'] } }>,
         reply: FastifyReply
     ): Promise<void> => {
         try {
@@ -98,15 +103,14 @@ export class ScoreController {
 
     getUserDailyScoresSortedByTheme = async (
         request: FastifyRequest<{
-            Params: { userId: User['id'] };
+            Params: { userId: UserResponse['id'] };
         }>,
         reply: FastifyReply
     ): Promise<void> => {
         try {
             const { userId } = request.params;
-            const scores = await this.scoreService.getUserDailyScoresSortedByTheme(
-                userId,
-            );
+            const scores =
+                await this.scoreService.getUserDailyScoresSortedByTheme(userId);
             if (!scores) reply.status(404).send('No scores found');
 
             reply.status(200).send(scores);
@@ -117,8 +121,8 @@ export class ScoreController {
 
     getUserDailyScoresBySubject = async (
         request: FastifyRequest<{
-            Params: { userId: User['id'] };
-            Querystring: { subjectId: Subject['id'] };
+            Params: { userId: UserResponse['id'] };
+            Querystring: { subjectId: SubjectResponse['id'] };
         }>,
         reply: FastifyReply
     ): Promise<void> => {
@@ -139,15 +143,16 @@ export class ScoreController {
 
     getUserGlobalScoresSortedByTheme = async (
         request: FastifyRequest<{
-            Params: { userId: User['id'] };
+            Params: { userId: UserResponse['id'] };
         }>,
         reply: FastifyReply
     ): Promise<void> => {
         try {
             const { userId } = request.params;
-            const scores = await this.scoreService.getUserGlobalScoresSortedByTheme(
-                userId,
-            );
+            const scores =
+                await this.scoreService.getUserGlobalScoresSortedByTheme(
+                    userId
+                );
             if (!scores) reply.status(404).send('No scores found');
 
             reply.status(200).send(scores);
@@ -158,15 +163,16 @@ export class ScoreController {
 
     getUserGlobalScoresSortedBySubject = async (
         request: FastifyRequest<{
-            Params: { userId: User['id'] };
+            Params: { userId: UserResponse['id'] };
         }>,
         reply: FastifyReply
     ): Promise<void> => {
         try {
             const { userId } = request.params;
-            const scores = await this.scoreService.getUserGlobalScoresSortedBySubject(
-                userId,
-            );
+            const scores =
+                await this.scoreService.getUserGlobalScoresSortedBySubject(
+                    userId
+                );
             if (!scores) reply.status(404).send('No scores found');
 
             reply.status(200).send(scores);
@@ -176,27 +182,31 @@ export class ScoreController {
     };
 
     getUserAverageScoreByTheme = async (
-        request: FastifyRequest<{ Params: { userId: User['id'] } }>,
+        request: FastifyRequest<{ Params: { userId: UserResponse['id'] } }>,
         reply: FastifyReply
     ): Promise<void> => {
         try {
             const { userId } = request.params;
-            const scores = await this.scoreService.getUserAverageScoreByTheme(userId);
+            const scores = await this.scoreService.getUserAverageScoreByTheme(
+                userId
+            );
             if (!scores) reply.status(404).send('No scores found');
 
             reply.status(200).send(scores);
         } catch (error) {
             reply.status(500).send(error);
         }
-    };  
+    };
 
     getUserAverageScoreBySubject = async (
-        request: FastifyRequest<{ Params: { userId: User['id'] } }>,
+        request: FastifyRequest<{ Params: { userId: UserResponse['id'] } }>,
         reply: FastifyReply
     ): Promise<void> => {
         try {
             const { userId } = request.params;
-            const scores = await this.scoreService.getUserAverageScoreBySubject(userId);
+            const scores = await this.scoreService.getUserAverageScoreBySubject(
+                userId
+            );
             if (!scores) reply.status(404).send('No scores found');
 
             reply.status(200).send(scores);

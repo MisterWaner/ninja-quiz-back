@@ -1,21 +1,22 @@
-import { Score } from '../../models/Score';
-import { ScoreRepository } from '../../application/score.repository';
-import { Subject } from '../../models/Subject';
-import { User } from '../../models/User';
-import pool from '../../database/config';
-import { subjectExsits } from '../../lib/helpers/general-helpers';
-import { mapScoreRow } from '../../lib/helpers/sql-helpers';
-import type {
+import {
+    CreateScoreInput,
+    ScoreResponse,
     UserGlobalScore,
     UserDailyScore,
     UserGlobalScoreSortedBySubject,
     UserGlobalScoreSortedByTheme,
-    UserAverageScoreSortedByTheme,
     UserAverageScoreSortedBySubject,
-} from '../../types/entities';
+    UserAverageScoreSortedByTheme,
+} from './score.schema';
+import { ScoreRepository } from '../../application/score.repository';
+import { SubjectResponse } from '../quiz/subject/subject.schema';
+import { UserResponse } from '../user/user.schema';
+import pool from '../../database/config';
+import { subjectExsits } from '../../lib/helpers/general-helpers';
+import { mapScoreRow } from '../../lib/helpers/sql-helpers';
 
 export class ScoreService implements ScoreRepository {
-    async addUserScore(score: Omit<Score, 'id'>): Promise<void> {
+    async addUserScore(score: Omit<CreateScoreInput, 'id'>): Promise<void> {
         const { userId, themeId, subjectId, value } = score;
         const date = new Date().toISOString();
 
@@ -73,13 +74,17 @@ export class ScoreService implements ScoreRepository {
         return dailyScores;
     }
 
-    async getUserGlobalScore(userId: User['id']): Promise<Score[]> {
+    async getUserGlobalScore(
+        userId: UserResponse['id']
+    ): Promise<UserGlobalScore[]> {
         const results = await pool.query(
             'SELECT * FROM scores WHERE user_id = $1',
             [userId]
         );
 
-        const userGlobalScore = results.rows.map(mapScoreRow) as Score[];
+        const userGlobalScore = results.rows.map(
+            mapScoreRow
+        ) as UserGlobalScore[];
 
         if (!userGlobalScore) throw new Error('No score found');
         console.log(userGlobalScore);
@@ -87,13 +92,15 @@ export class ScoreService implements ScoreRepository {
         return userGlobalScore;
     }
 
-    async getUserDailyScore(userId: User['id']): Promise<Score[]> {
+    async getUserDailyScore(
+        userId: UserResponse['id']
+    ): Promise<UserDailyScore[]> {
         const results = await pool.query(
             'SELECT * FROM scores WHERE user_id = $1 AND DATE(date) = CURRENT_DATE',
             [userId]
         );
 
-        const dailyScores = results.rows.map(mapScoreRow) as Score[];
+        const dailyScores = results.rows.map(mapScoreRow) as UserDailyScore[];
 
         if (!dailyScores) throw new Error('No score found');
 
@@ -101,8 +108,8 @@ export class ScoreService implements ScoreRepository {
     }
 
     async getUserDailyScoresSortedByTheme(
-        userId: User['id']
-    ): Promise<Score[]> {
+        userId: UserResponse['id']
+    ): Promise<ScoreResponse[]> {
         const results = await pool.query(
             'SELECT * FROM scores WHERE user_id = $1 AND DATE(date) = CURRENT_DATE ORDER BY theme_id DESC',
             [userId]
@@ -110,7 +117,7 @@ export class ScoreService implements ScoreRepository {
 
         const userDailyScoresSortedByTheme = results.rows.map(
             mapScoreRow
-        ) as Score[];
+        ) as ScoreResponse[];
 
         if (!userDailyScoresSortedByTheme) throw new Error('No scores found');
 
@@ -118,9 +125,9 @@ export class ScoreService implements ScoreRepository {
     }
 
     async getUserDailyScoresBySubject(
-        userId: User['id'],
-        subjectId: Subject['id']
-    ): Promise<Score[]> {
+        userId: UserResponse['id'],
+        subjectId: SubjectResponse['id']
+    ): Promise<ScoreResponse[]> {
         if (!subjectId) throw new Error('Subject is required');
 
         const subjectIsValid = subjectExsits(subjectId);
@@ -133,7 +140,7 @@ export class ScoreService implements ScoreRepository {
 
         const userDailyScoresBySubject = results.rows.map(
             mapScoreRow
-        ) as Score[];
+        ) as ScoreResponse[];
 
         if (!userDailyScoresBySubject) throw new Error('No scores found');
 
@@ -141,7 +148,7 @@ export class ScoreService implements ScoreRepository {
     }
 
     async getUserGlobalScoresSortedByTheme(
-        userId: User['id']
+        userId: UserResponse['id']
     ): Promise<UserGlobalScoreSortedByTheme[]> {
         const results = await pool.query(
             `
@@ -169,7 +176,7 @@ export class ScoreService implements ScoreRepository {
     }
 
     async getUserGlobalScoresSortedBySubject(
-        userId: User['id']
+        userId: UserResponse['id']
     ): Promise<UserGlobalScoreSortedBySubject[]> {
         const results = await pool.query(
             `
@@ -197,7 +204,7 @@ export class ScoreService implements ScoreRepository {
     }
 
     async getUserAverageScoreByTheme(
-        userId: User['id']
+        userId: UserResponse['id']
     ): Promise<UserAverageScoreSortedByTheme[]> {
         const results = await pool.query(
             `
@@ -227,7 +234,7 @@ export class ScoreService implements ScoreRepository {
     }
 
     async getUserAverageScoreBySubject(
-        userId: User['id']
+        userId: UserResponse['id']
     ): Promise<UserAverageScoreSortedBySubject[]> {
         const results = await pool.query(
             `

@@ -61,7 +61,7 @@ const createUserSchema = z
         path: ['confirmPassword'],
     });
 
-const userResponseSchema = z.object({
+export const userResponseSchema = z.object({
     id: z.nanoid(),
     password: z
         .string()
