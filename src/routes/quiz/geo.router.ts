@@ -1,9 +1,9 @@
 import { FastifyInstance } from 'fastify';
-import { CapitalsQuizController } from '../../modules/questions/geography/capitals/capitals.quiz.controller';
-import { CapitalsQuestionService } from '../../modules/questions/geography/capitals/capitals.question.service';
-import { FlagsQuestionService } from '../../modules/questions/geography/flags/flags.question.service';
-import { FlagsQuizController } from '../../modules/questions/geography/flags/flags.quiz.controller';
-import { Quiz } from '../../models/Quiz';
+import { CapitalsQuizController } from '../../domain/quiz/question/geography/capitals/capitals.quiz.controller';
+import { FlagsQuizController } from '../../domain/quiz/question/geography/flags/flags.quiz.controller';
+import { CapitalsQuestionService } from '../../domain/quiz/question/geography/capitals/capitals.question.service';
+import { FlagsQuestionService } from '../../domain/quiz/question/geography/flags/flags.question.service';
+import { Quiz } from '../../domain/quiz/quiz.schema';
 
 const capitalsQuestionService = new CapitalsQuestionService();
 const capitalsQuizController = new CapitalsQuizController(
@@ -77,6 +77,10 @@ export async function geoRouter(fastify: FastifyInstance) {
     });
 
     flagsRoutes.forEach(({ url, handler }) => {
-        fastify.get<{ Reply: Quiz }>(url, {}, handler.bind(flagsQuizController));
+        fastify.get<{ Reply: Quiz }>(
+            url,
+            {},
+            handler.bind(flagsQuizController)
+        );
     });
 }

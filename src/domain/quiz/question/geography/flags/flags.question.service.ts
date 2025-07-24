@@ -1,13 +1,13 @@
-import { GeoFlagsQuestionRepository } from '../../../../application/question.repository';
-import { MultipleChoiceQuestion } from '../../../../models/Question';
-import { generateNumberId } from '../../../../lib/id-generators';
+import { GeoFlagsQuestionRepository } from '../../../../../application/question.repository';
+import { MultipleChoiceQuestion } from '../../question.schema';
+import { generateNumberId } from '../../../../../lib/id-generators';
 import {
     shuffleOptionsInMultipleChoiceQuestion,
     getRandomItem,
     generateMultipleChoiceQuestionOptions,
-} from '../../../../lib/helpers/quiz-helpers';
-import { fetchAfricanCountries } from '../datas/africanDatas';
+} from '../../../../../lib/helpers/quiz-helpers';
 import { fetchAsianCountries } from '../datas/asianDatas';
+import { fetchAfricanCountries } from '../datas/africanDatas';
 import { fetchEuropeanCountries } from '../datas/europeanDatas';
 import { fetchAmericanCountries } from '../datas/americanDatas';
 import { fetchOceanianCountries } from '../datas/oceanianDatas';
@@ -28,13 +28,13 @@ export class FlagsQuestionService implements GeoFlagsQuestionRepository {
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
 
-        return new MultipleChoiceQuestion(
+        return {
             id,
             questionText,
-            options.flat() as string[],
-            correctAnswer,
-            imageUrl
-        );
+            options: options.flat() as string[],
+            correctAnswer: correctAnswer,
+            imgUrl: imageUrl,
+        };
     }
 
     async generateAfricanFlagsQuestion(): Promise<MultipleChoiceQuestion> {
@@ -52,13 +52,13 @@ export class FlagsQuestionService implements GeoFlagsQuestionRepository {
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
 
-        return new MultipleChoiceQuestion(
+        return {
             id,
             questionText,
-            options.flat() as string[],
-            correctAnswer,
-            imageUrl
-        );
+            options: options.flat() as string[],
+            correctAnswer: correctAnswer,
+            imgUrl: imageUrl,
+        };
     }
 
     async generateAsianFlagsQuestion(): Promise<MultipleChoiceQuestion> {
@@ -77,13 +77,13 @@ export class FlagsQuestionService implements GeoFlagsQuestionRepository {
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
 
-        return new MultipleChoiceQuestion(
+        return {
             id,
             questionText,
-            options.flat() as string[],
-            correctAnswer,
-            imageUrl
-        );
+            options: options.flat() as string[],
+            correctAnswer: correctAnswer,
+            imgUrl: imageUrl,
+        };
     }
 
     async generateAmericanFlagsQuestion(): Promise<MultipleChoiceQuestion> {
@@ -101,13 +101,13 @@ export class FlagsQuestionService implements GeoFlagsQuestionRepository {
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
 
-        return new MultipleChoiceQuestion(
+        return {
             id,
             questionText,
-            options.flat() as string[],
-            correctAnswer,
-            imageUrl
-        );
+            options: options.flat() as string[],
+            correctAnswer: correctAnswer,
+            imgUrl: imageUrl,
+        };
     }
 
     async generateOceanianFlagsQuestion(): Promise<MultipleChoiceQuestion> {
@@ -125,13 +125,13 @@ export class FlagsQuestionService implements GeoFlagsQuestionRepository {
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
 
-        return new MultipleChoiceQuestion(
+        return {
             id,
             questionText,
-            options.flat() as string[],
-            correctAnswer,
-            imageUrl
-        );
+            options: options.flat() as string[],
+            correctAnswer: correctAnswer,
+            imgUrl: imageUrl,
+        };
     }
 
     async generateRandomFlagsQuestion(): Promise<MultipleChoiceQuestion> {

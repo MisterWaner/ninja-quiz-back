@@ -1,16 +1,16 @@
-import { GeoCapitalsQuestionRepository } from '../../../../application/question.repository';
-import { MultipleChoiceQuestion } from '../../../../models/Question';
-import { generateNumberId } from '../../../../lib/id-generators';
+import { GeoCapitalsQuestionRepository } from '../../../../../application/question.repository';
+import { MultipleChoiceQuestion } from '../../question.schema';
 import {
     shuffleOptionsInMultipleChoiceQuestion,
     getRandomItem,
     generateMultipleChoiceQuestionOptions,
-} from '../../../../lib/helpers/quiz-helpers';
+} from '../../../../../lib/helpers/quiz-helpers';
 import { fetchEuropeanCountries } from '../datas/europeanDatas';
 import { fetchAfricanCountries } from '../datas/africanDatas';
 import { fetchAsianCountries } from '../datas/asianDatas';
 import { fetchAmericanCountries } from '../datas/americanDatas';
 import { fetchOceanianCountries } from '../datas/oceanianDatas';
+import { generateNumberId } from '../../../../../lib/id-generators';
 
 export class CapitalsQuestionService implements GeoCapitalsQuestionRepository {
     async generateEuropeanCapitalsQuestion(): Promise<MultipleChoiceQuestion> {
@@ -27,12 +27,12 @@ export class CapitalsQuestionService implements GeoCapitalsQuestionRepository {
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
 
-        return new MultipleChoiceQuestion(
+        return {
             id,
             questionText,
-            options.flat() as string[],
-            correctAnswer
-        );
+            options: options.flat() as string[],
+            correctAnswer: correctAnswer,
+        };
     }
 
     async generateAfricanCapitalsQuestion(): Promise<MultipleChoiceQuestion> {
@@ -49,12 +49,12 @@ export class CapitalsQuestionService implements GeoCapitalsQuestionRepository {
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
 
-        return new MultipleChoiceQuestion(
+        return {
             id,
             questionText,
-            options.flat() as string[],
-            correctAnswer
-        );
+            options: options.flat() as string[],
+            correctAnswer: correctAnswer,
+        };
     }
 
     async generateAsianCapitalsQuestion(): Promise<MultipleChoiceQuestion> {
@@ -71,12 +71,12 @@ export class CapitalsQuestionService implements GeoCapitalsQuestionRepository {
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
 
-        return new MultipleChoiceQuestion(
+        return {
             id,
             questionText,
-            options.flat() as string[],
-            correctAnswer
-        );
+            options: options.flat() as string[],
+            correctAnswer: correctAnswer,
+        };
     }
 
     async generateAmericanCapitalsQuestion(): Promise<MultipleChoiceQuestion> {
@@ -93,13 +93,14 @@ export class CapitalsQuestionService implements GeoCapitalsQuestionRepository {
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
 
-        return new MultipleChoiceQuestion(
+        return {
             id,
             questionText,
-            options.flat() as string[],
-            correctAnswer
-        );
+            options: options.flat() as string[],
+            correctAnswer: correctAnswer,
+        };
     }
+
     async generateOceanianCapitalsQuestion(): Promise<MultipleChoiceQuestion> {
         const id = generateNumberId();
         const countriesData = await fetchOceanianCountries();
@@ -114,12 +115,12 @@ export class CapitalsQuestionService implements GeoCapitalsQuestionRepository {
         options.push(correctAnswer);
         shuffleOptionsInMultipleChoiceQuestion(options);
 
-        return new MultipleChoiceQuestion(
+        return {
             id,
             questionText,
-            options.flat() as string[],
-            correctAnswer
-        );
+            options: options.flat() as string[],
+            correctAnswer: correctAnswer,
+        };
     }
 
     async generateRandomCapitalsQuestion(): Promise<MultipleChoiceQuestion> {

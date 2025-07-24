@@ -1,23 +1,6 @@
 import { UserResponse } from '../domain/user/user.schema';
 import { Score } from '../models/Score';
 
-export type Country = {
-    name: {
-        common: string;
-    };
-    flags: {
-        png: string;
-        svg: string;
-    };
-    capital: string[];
-};
-
-export type HistoricalDateQuestion = {
-    id?: number;
-    question: string;
-    year: number;
-}
-
 export type UserGlobalScore = {
     userId: UserResponse['id'];
     username: UserResponse['username'];

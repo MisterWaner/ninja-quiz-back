@@ -1,4 +1,4 @@
-import type { Country } from '../../types/entities';
+import { Country } from '../../domain/quiz/question/geography/country.schemas';
 
 export const asianDatas: Country[] = [
     {
