@@ -113,7 +113,7 @@ export class UserController {
                 maxAge: 60 * 60 * 24, // 24 hours
             });
 
-            return { accessToken: token };
+            return { token };
         } catch (error) {
             console.error('Error logging in user:', error);
             reply.status(500).send({ message: 'Erreur interne du serveur' });
