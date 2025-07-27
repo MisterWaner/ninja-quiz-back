@@ -1,6 +1,6 @@
-import { Score } from "../../models/Score";
+import { ScoreResponse } from "../../domain/score/score.schema"
 
-export function mapScoreRow(row: any): Score{
+export function mapScoreRow(row: any): ScoreResponse{
     return {
         id: row.id,
         userId: row.user_id,

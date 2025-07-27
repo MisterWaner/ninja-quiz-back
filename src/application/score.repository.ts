@@ -1,32 +1,39 @@
-import { Score } from '../models/Score';
-import { User } from '../models/User';
-import type {
-    UserGlobalScore,
+import {
+    CreateScoreInput,
+    ScoreResponse,
+    UserAverageScoreSortedBySubject,
+    UserAverageScoreSortedByTheme,
     UserDailyScore,
+    UserGlobalScore,
     UserGlobalScoreSortedBySubject,
     UserGlobalScoreSortedByTheme,
-    UserAverageScoreSortedByTheme,
-    UserAverageScoreSortedBySubject
-} from '../types/entities';
-import { Subject } from '../models/Subject';
+} from '../domain/score/score.schema';
+import { UserResponse } from '../domain/user/user.schema';
+import { SubjectResponse } from '../domain/quiz/subject/subject.schema';
 
 export interface ScoreRepository {
-    addUserScore(score: Omit<Score, 'id'>): Promise<void>;
+    addUserScore(score: Omit<CreateScoreInput, 'id'>): Promise<void>;
     getUsersGlobalScore(): Promise<UserGlobalScore[]>;
     getUsersDailyScore(): Promise<UserDailyScore[]>;
-    getUserGlobalScore(userId: User['id']): Promise<Score[]>;
-    getUserDailyScore(userId: User['id']): Promise<Score[]>;
-    getUserDailyScoresSortedByTheme(userId: User['id']): Promise<Score[]>;
+    getUserGlobalScore(userId: UserResponse['id']): Promise<ScoreResponse[]>;
+    getUserDailyScore(userId: UserResponse['id']): Promise<ScoreResponse[]>;
+    getUserDailyScoresSortedByTheme(
+        userId: UserResponse['id']
+    ): Promise<ScoreResponse[]>;
     getUserDailyScoresBySubject(
-        userId: User['id'],
-        subjectId: Subject['id']
-    ): Promise<Score[]>;
-    getUserAverageScoreByTheme(userId: User['id']): Promise<UserAverageScoreSortedByTheme[]>;
-    getUserAverageScoreBySubject(userId: User['id']): Promise<UserAverageScoreSortedBySubject[]>;
+        userId: UserResponse['id'],
+        subjectId: SubjectResponse['id']
+    ): Promise<ScoreResponse[]>;
+    getUserAverageScoreByTheme(
+        userId: UserResponse['id']
+    ): Promise<UserAverageScoreSortedByTheme[]>;
+    getUserAverageScoreBySubject(
+        userId: UserResponse['id']
+    ): Promise<UserAverageScoreSortedBySubject[]>;
     getUserGlobalScoresSortedByTheme(
-        userId: User['id']
+        userId: UserResponse['id']
     ): Promise<UserGlobalScoreSortedByTheme[]>;
     getUserGlobalScoresSortedBySubject(
-        userId: User['id']
+        userId: UserResponse['id']
     ): Promise<UserGlobalScoreSortedBySubject[]>;
 }

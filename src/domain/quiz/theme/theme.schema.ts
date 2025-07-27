@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 const themeCore = {
+    id: z.string(),
     name: z.string().trim(),
     path: z.string().trim(),
     subjectId: z.number().int().positive(),
@@ -21,7 +22,6 @@ const createThemeSchema = z.object({
 
 export const themeResponseSchema = z.object({
     ...themeCore,
-    id: z.string(),
 });
 
 export type CreateThemeInput = z.infer<typeof createThemeSchema>;

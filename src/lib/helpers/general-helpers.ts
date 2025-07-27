@@ -1,6 +1,6 @@
 import pool from '../../database/config';
-import { Subject } from "../../models/Subject";
-import { Theme } from "../../models/Theme";
+import { SubjectResponse } from '../../domain/quiz/subject/subject.schema';
+import { ThemeResponse } from '../../domain/quiz/theme/theme.schema';
 
 export function stringWithoutAccents(string: string): string {
     return string.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
@@ -22,8 +22,8 @@ export function formatDateToString(date: Date): string {
     return date.toString().split('T')[0];
 }
 
-export function subjectExsits(subjectId: Subject['id']): boolean {
-    const subject = pool.query<Subject>(
+export function subjectExsits(subjectId: SubjectResponse['id']): boolean {
+    const subject = pool.query<SubjectResponse>(
         'SELECT 1 FROM subjects WHERE id = $1',
         [subjectId]
     );
@@ -31,8 +31,8 @@ export function subjectExsits(subjectId: Subject['id']): boolean {
     return !!subject;
 }
 
-export function themeExsits(themeId: Theme['id']): boolean {
-    const theme = pool.query<Theme>(
+export function themeExsits(themeId: ThemeResponse['id']): boolean {
+    const theme = pool.query<ThemeResponse>(
         'SELECT 1 FROM themes WHERE id = $1',
         [themeId]
     );

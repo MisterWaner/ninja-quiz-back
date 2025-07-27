@@ -24,6 +24,13 @@ export async function usersRouter(fastify: FastifyInstance) {
         userController.logoutHandler
     );
     fastify.get<{ Reply: UserResponse[] }>(
+        '/me',
+        {
+            preHandler: [fastify.authenticate],
+        },
+        userController.getMeHandler
+    );
+    fastify.get<{ Reply: UserResponse[] }>(
         '/',
         {
             preHandler: [fastify.authenticate],

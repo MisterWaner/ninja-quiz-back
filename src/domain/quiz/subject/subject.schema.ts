@@ -2,8 +2,10 @@ import { z } from 'zod';
 import { themeResponseSchema } from '../theme/theme.schema';
 
 const subjectCore = {
+    id: z.number().int().positive(),
     name: z.string().trim(),
     path: z.string().trim(),
+    themes: z.array(themeResponseSchema),
 };
 
 const createSubjectSchema = z.object({
@@ -18,7 +20,6 @@ const createSubjectSchema = z.object({
 
 export const subjectResponseSchema = z.object({
     ...subjectCore,
-    id: z.number().int().positive(),
     themes: z.array(themeResponseSchema)
 });
 

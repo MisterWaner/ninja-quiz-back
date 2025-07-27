@@ -8,6 +8,7 @@ export class UserController {
         this.registerUserHandler = this.registerUserHandler.bind(this);
         this.loginHandler = this.loginHandler.bind(this);
         this.logoutHandler = this.logoutHandler.bind(this);
+        this.getMeHandler = this.getMeHandler.bind(this);
         this.getUsers = this.getUsers.bind(this);
         this.getUserById = this.getUserById.bind(this);
         this.updateUserUsername = this.updateUserUsername.bind(this);
@@ -137,6 +138,29 @@ export class UserController {
                 .send({ message: 'Déconnexion réussie' });
         } catch (error) {
             console.error('Error logging out user:', error);
+            reply.status(500).send({ message: 'Erreur interne du serveur' });
+        }
+    }
+
+    async getMeHandler(request: FastifyRequest, reply: FastifyReply) {
+        try {
+            console.log(request.user)
+            const userId = request.user?.id;
+            if (!userId) {
+                reply.status(401).send({ message: 'Non authentifié' });
+                return;
+            }
+
+            const user = await this.userService.getUserById(userId);
+            if (!user) {
+                reply.status(404).send({ message: 'Utilisateur non trouvé' });
+                return;
+            }
+
+            console.log(user)
+            reply.status(200).send(user);
+        } catch (error) {
+            console.error('Error fetching user:', error);
             reply.status(500).send({ message: 'Erreur interne du serveur' });
         }
     }

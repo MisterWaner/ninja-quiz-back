@@ -5,7 +5,6 @@ import { subjectResponseSchema } from '../quiz/subject/subject.schema';
 
 const scoreCore = {
     id: z.number().int().positive(),
-    userId: userResponseSchema.shape.id,
     subjectId: subjectResponseSchema.shape.id,
     themeId: themeResponseSchema.shape.id,
     value: z
@@ -27,38 +26,34 @@ const createScoreSchema = z.object({
 });
 
 const scoreResponseSchema = z.object({
+    userId: userResponseSchema.shape.id,
     ...scoreCore,
 });
 
 export const userGlobalScoreSchema = z.object({
-    userId: scoreCore.userId,
     username: userResponseSchema.shape.username,
     totalScore: z.number().int().min(0),
 });
 
 export const userGlobalScoreSortedBySubject = z.object({
-    userId: scoreCore.userId,
     username: userResponseSchema.shape.username,
     totalScore: z.number().int().min(0),
     subjectName: subjectResponseSchema.shape.name,
 });
 
 export const userGlobalScoreSortedByTheme = z.object({
-    userId: scoreCore.userId,
     username: userResponseSchema.shape.username,
     totalScore: z.number().int().min(0),
     themeName: themeResponseSchema.shape.name,
 });
 
 export const userAverageScoreSortedByTheme = z.object({
-    userId: scoreCore.userId,
     username: userResponseSchema.shape.username,
     averageScore: z.number().int().min(0),
     totalScore: z.number().int().min(0),
     themeName: themeResponseSchema.shape.name,
 });
 export const userAverageScoreSortedBySubject = z.object({
-    userId: scoreCore.userId,
     username: userResponseSchema.shape.username,
     averageScore: z.number().int().min(0),
     totalScore: z.number().int().min(0),
@@ -66,7 +61,6 @@ export const userAverageScoreSortedBySubject = z.object({
 });
 
 export const userDailyScoreSchema = z.object({
-    userId: scoreCore.userId,
     username: userResponseSchema.shape.username,
     totalScore: z.number().int().min(0),
     date: scoreCore.date,

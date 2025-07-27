@@ -1,18 +1,16 @@
-import {SubjectService} from '../modules/subjects/subject.service';
-import {ThemeService} from '../modules/themes/theme.service';
-import {AuthService} from "../modules/auth/auth.service";
-import {UserService} from "../modules/users/user.service";
-import {Subject} from '../models/Subject';
-import {Theme} from '../models/Theme';
-import {User} from '../models/User';
-import {config} from 'dotenv'
+import { SubjectService } from '../domain/quiz/subject/subject.service';
+import { ThemeService } from '../domain/quiz/theme/theme.service';
+import { UserService } from '../domain/user/user.service';
+import { CreateSubjectInput } from '../domain/quiz/subject/subject.schema';
+import { CreateThemeInput } from '../domain/quiz/theme/theme.schema';
+import { CreateUserInput } from '../domain/user/user.schema';
+import { config } from 'dotenv';
 
-config()
+config();
 
 const subjectService = new SubjectService();
 const themeService = new ThemeService();
 const userService = new UserService();
-const authService = new AuthService();
 
 const subjectsWithThemes: Record<string, string[]> = {
     Mathématiques: [
@@ -37,18 +35,16 @@ const subjectsWithThemes: Record<string, string[]> = {
         'Drapeaux africains',
         'Drapeaux aléatoires',
     ],
-    Histoire: [
-        'Dates historiques'
-    ]
+    Histoire: ['Dates historiques'],
 };
 
 export async function seedDatabase() {
     for (const [subjectName, themes] of Object.entries(subjectsWithThemes)) {
         try {
-            const subject: Subject = {
+            const subject: CreateSubjectInput = {
                 id: 0,
                 name: subjectName,
-                subjectPath: '',
+                path: '',
                 themes: [],
             };
 
@@ -63,10 +59,10 @@ export async function seedDatabase() {
             }
 
             for (const themeName of themes) {
-                const theme: Theme = {
+                const theme: CreateThemeInput = {
                     id: '',
                     name: themeName,
-                    themePath: '',
+                    path: '',
                     subjectId: createdSubject.id,
                 };
 
@@ -80,18 +76,19 @@ export async function seedDatabase() {
     }
 
     try {
-        const username: User["username"] = 'Test';
-        const password: User["password"] = process.env.TESTERPWD as string;
-        const userExist = await userService.getUserByUsername(username)
+        const username: CreateUserInput['username'] = 'Test';
+        const password: CreateUserInput['password'] = process.env
+            .TESTERPWD as string;
+        const userExist = await userService.getUserByUsername(username);
 
         if (!userExist) {
-            await authService.registerUser(username, password);
-            console.log(`✅ User "${username}" created successfully.`)
+            await userService.createUser({ username, password });
+            console.log(`✅ User "${username}" created successfully.`);
         } else {
-            console.log(`ℹ️ User "${username}" already exists.`)
+            console.log(`ℹ️ User "${username}" already exists.`);
         }
     } catch (error) {
-        console.error(`❌ Error during tester user creation: ${error}`)
+        console.error(`❌ Error during tester user creation: ${error}`);
     }
 
     console.log('🌱 Database successfully seeded.');

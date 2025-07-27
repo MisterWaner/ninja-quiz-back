@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
+
 import { ScoreService } from './score.service';
-import { CreateScoreInput, ScoreResponse } from './score.schema';
+import { CreateScoreInput } from './score.schema';
 import { UserResponse } from '../user/user.schema';
 import { SubjectResponse } from '../quiz/subject/subject.schema';
 
@@ -26,12 +27,20 @@ export class ScoreController {
         reply: FastifyReply
     ): Promise<void> => {
         try {
-            const { userId, themeId, subjectId, value } =
+            const { themeId, subjectId, value } =
                 request.body as CreateScoreInput;
+
+            const authenticatedUser = request.user?.id as UserResponse['id'];
+
+            if (!authenticatedUser) {
+                reply.status(401).send({ message: 'Unauthorized' });
+                return;
+            }
+
             const date = new Date();
 
             await this.scoreService.addUserScore({
-                userId,
+                userId: authenticatedUser,
                 themeId,
                 subjectId,
                 value,

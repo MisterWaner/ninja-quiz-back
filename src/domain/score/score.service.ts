@@ -15,8 +15,16 @@ import pool from '../../database/config';
 import { subjectExsits } from '../../lib/helpers/general-helpers';
 import { mapScoreRow } from '../../lib/helpers/sql-helpers';
 
+type AddUserScoreParams = {
+    userId: UserResponse['id'];
+    themeId: string;
+    subjectId: SubjectResponse['id'];
+    value: number;
+    date: Date;
+};
+
 export class ScoreService implements ScoreRepository {
-    async addUserScore(score: Omit<CreateScoreInput, 'id'>): Promise<void> {
+    async addUserScore(score: AddUserScoreParams): Promise<void> {
         const { userId, themeId, subjectId, value } = score;
         const date = new Date().toISOString();
 
@@ -76,7 +84,7 @@ export class ScoreService implements ScoreRepository {
 
     async getUserGlobalScore(
         userId: UserResponse['id']
-    ): Promise<UserGlobalScore[]> {
+    ): Promise<ScoreResponse[]> {
         const results = await pool.query(
             'SELECT * FROM scores WHERE user_id = $1',
             [userId]
@@ -84,7 +92,7 @@ export class ScoreService implements ScoreRepository {
 
         const userGlobalScore = results.rows.map(
             mapScoreRow
-        ) as UserGlobalScore[];
+        ) as ScoreResponse[];
 
         if (!userGlobalScore) throw new Error('No score found');
         console.log(userGlobalScore);
@@ -94,13 +102,13 @@ export class ScoreService implements ScoreRepository {
 
     async getUserDailyScore(
         userId: UserResponse['id']
-    ): Promise<UserDailyScore[]> {
+    ): Promise<ScoreResponse[]> {
         const results = await pool.query(
             'SELECT * FROM scores WHERE user_id = $1 AND DATE(date) = CURRENT_DATE',
             [userId]
         );
 
-        const dailyScores = results.rows.map(mapScoreRow) as UserDailyScore[];
+        const dailyScores = results.rows.map(mapScoreRow) as ScoreResponse[];
 
         if (!dailyScores) throw new Error('No score found');
 
