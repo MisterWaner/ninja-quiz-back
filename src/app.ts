@@ -43,7 +43,7 @@ fastifyApp.register(fastifyCookie, {
 });
 
 fastifyApp.register(fastifyCors, {
-    origin: 'http://localhost:5173',
+    origin: 'https://ninja-quizz.netlify.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
         'Content-Type',

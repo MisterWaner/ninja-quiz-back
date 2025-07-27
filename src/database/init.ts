@@ -8,7 +8,9 @@ config();
 
 const adminPool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: false
+    ssl: {
+        rejectUnauthorized: false
+    }
 });
 
 async function initDatabase() {
