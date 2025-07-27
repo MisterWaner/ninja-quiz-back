@@ -145,7 +145,7 @@ export class UserController {
 
     async getMeHandler(request: FastifyRequest, reply: FastifyReply) {
         try {
-            console.log(request.user)
+            console.log(request.user);
             const userId = request.user?.id;
             if (!userId) {
                 reply.status(401).send({ message: 'Non authentifié' });
@@ -158,8 +158,8 @@ export class UserController {
                 return;
             }
 
-            console.log(user)
-            reply.status(200).send(user);
+            console.log(user);
+            reply.status(200).send({ id: user.id, username: user.username });
         } catch (error) {
             console.error('Error fetching user:', error);
             reply.status(500).send({ message: 'Erreur interne du serveur' });
