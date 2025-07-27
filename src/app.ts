@@ -13,6 +13,10 @@ const fastifyApp = fastify({
 
 fastifyApp.register(fastifyJwt, {
     secret: process.env.JWT_SECRET!,
+    cookie: {
+        cookieName: 'access_token',
+        signed: false,
+    }
 });
 
 fastifyApp.decorate(
