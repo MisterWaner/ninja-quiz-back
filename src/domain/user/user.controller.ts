@@ -110,6 +110,7 @@ export class UserController {
                 httpOnly: true,
                 secure: true,
                 sameSite: 'none',
+                maxAge: 60 * 60 * 24, // 24 hours
             });
 
             return { accessToken: token };

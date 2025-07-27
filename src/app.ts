@@ -11,6 +11,11 @@ const fastifyApp = fastify({
     logger: true,
 });
 
+fastifyApp.register(fastifyCookie, {
+    secret: process.env.COOKIE_SECRET!,
+    hook: 'preHandler',
+});
+
 fastifyApp.register(fastifyJwt, {
     secret: process.env.JWT_SECRET!,
     cookie: {
@@ -41,21 +46,14 @@ fastifyApp.addHook(
     }
 );
 
-fastifyApp.register(fastifyCookie, {
-    secret: process.env.COOKIE_SECRET!,
-    hook: 'preHandler',
-});
-
 fastifyApp.register(fastifyCors, {
     origin: 'https://ninja-quizz.netlify.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
         'Content-Type',
         'Authorization',
-        'Access-Control-Allow-Origin',
     ],
     credentials: true,
-    preflight: true,
 });
 
 fastifyApp.addHook('onRequest', (request, reply, done) => {
